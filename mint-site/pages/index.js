@@ -11,6 +11,7 @@ export default function Home() {
       console.log("connecting wallet")
       const response = await window.martian.connect();
       sender = response.address
+      console.log(sender);
       setSender(sender)
       const isConnected = await window.martian.isConnected()
       if(isConnected) {
@@ -24,16 +25,16 @@ export default function Home() {
   };
 
   const mint = async () => {
+    console.log(sender);
     // Generate a transaction
-    var collection_name = "Test collection."
     const payload = {
-      type: "script_function_payload",
-      function: "0xFE1B69789117820C8CB68811E453FAB0FE0C67CE7E25EBF51DEEB7EE9083BD50::candy_machine_v2::mint_tokens",
+      type: "entry_function_payload",
+      function: "0xBDCDFC476D4DB40CBF4BF3B62E3973D10E1CB53B89D915F0815982A78BFCDE1F::candy_machine_v2::mint_tokens",
       type_arguments: [],
       arguments: [
-      	"0x16516ed571cb90ca28cf8361663ba7fab155b005b5eb6326c9a74373af5ae253",
+      	"0xe423e793d2180d96844ca9cdf7954c84e09a33eaf9646c5495b4d1af0b4c9306",
 	"Test collection.",
-	"5",
+	"1",
       ]
     };
     const transaction = await window.martian.generateTransaction(sender, payload);
