@@ -5,6 +5,7 @@ import styles from '../styles/Home.module.css'
 export default function Home() {
   const [sender, setSender] = useState(null)
   const [isWalletConnected, setIsWalletConnected] = useState(false)
+  const [connenctButtonText, setConnenctButtonText] = useState('Connect');
   const connectWallet = async () => {
     if ("martian" in window) {
       console.log("connecting wallet")
@@ -16,6 +17,7 @@ export default function Home() {
         setIsWalletConnected(true)
       }
       console.log("wallet connected");
+      setConnenctButtonText('Connected');
       return;
     }
     window.open("https://www.martianwallet.xyz/", "_blank");
@@ -57,7 +59,7 @@ export default function Home() {
             Nevermores
           </h1>
           <div className={styles.topcorner}>
-            <button className={styles.button} onClick={connectWallet}>Connect</button>
+            <button className={styles.button} onClick={connectWallet}>{connenctButtonText}</button>
           </div>
           <video controls src={"/nevermores.mp4"} style={{ width: "960px", height:"480px" }} autoPlay muted />
           <div>
