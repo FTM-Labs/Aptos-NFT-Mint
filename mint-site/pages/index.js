@@ -50,19 +50,19 @@ export default function Home() {
     <div className="bg-gray-500">
       <div className={styles.container}>
         <Head>
-          <title>Nevemores NFT</title>
-          <meta name="description" content="Nevermores NFT" />
+          <title>RektCats NFT</title>
+          <meta name="description" content="RektCats NFT" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
         <main className={styles.main}>
           <h1 className={styles.title}>
-            Nevermores
+            RektCats
           </h1>
           <div className={styles.topcorner}>
             <button className={styles.button} onClick={connectWallet}>{connenctButtonText}</button>
           </div>
-          <video controls src={"/nevermores.mp4"} style={{ width: "960px", height:"480px" }} autoPlay muted />
+          <img src={"/rekt.jpeg"} style={{ width: "960px", height:"480px" }} />
           <div>
             <button className={styles.button} onClick={mint} disabled={!isWalletConnected}>Mint</button>
           </div>
