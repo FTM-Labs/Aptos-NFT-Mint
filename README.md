@@ -127,3 +127,4 @@ python3 cli.py
 Choose "Update WL for existing collection"
 
 ***Update WL will override the past WL configuration. If you want to add some more wl spots, just add below the previous file and upload it.***
+=======
