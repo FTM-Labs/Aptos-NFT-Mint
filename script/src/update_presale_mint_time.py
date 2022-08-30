@@ -7,6 +7,8 @@ from account_address import AccountAddress
 from account import Account
 import ed25519
 import os
+import json
+
 def update():
     with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
         config = json.load(f)
