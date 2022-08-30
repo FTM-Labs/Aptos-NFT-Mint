@@ -1,0 +1,124 @@
+load("@python_deps//:requirements.bzl", "requirement")
+
+py_library(
+	name = "constants",
+	srcs = ["constants.py"]
+)
+
+py_library(
+	name = "bcs",
+	srcs = ["bcs.py"],
+)
+
+py_library(
+	name = "ed25519",
+	srcs = ["ed25519.py"],
+	deps = [
+		":bcs",
+		requirement("pynacl")
+	]
+)
+
+py_library(
+	name = "account_address",
+	srcs = ["account_address.py"],
+	deps = [
+		":ed25519",
+		":bcs"
+	]
+)
+
+py_library(
+	name = "account",
+	srcs = ["account.py"],
+	deps = [
+		":ed25519",
+		":account_address"
+	]
+)
+
+py_library(
+	name = "type_tag",
+	srcs = ["type_tag.py"],
+	deps = [
+		":bcs",
+		":account_address"
+	]
+)
+
+py_library(
+	name = "authenticator",
+	srcs = ["authenticator.py"],
+	deps = [
+		":bcs",
+		":ed25519",
+		":account_address"
+	]
+)
+
+py_library(
+	name = "transactions",
+	srcs = ["transactions.py"],
+	deps = [
+		":bcs",
+		":ed25519",
+		":account_address",
+		":authenticator",
+		":type_tag"
+	]
+)
+
+py_library(
+	name = "client",
+	srcs = ["client.py"],
+	deps = [
+		":bcs",
+		":account_address",
+		":account",
+		":authenticator",
+		":transactions",
+		":type_tag",
+		requirement("httpx")
+	]
+)
+
+py_library(
+	name = "upload_image",
+	srcs = ["upload_image.py"],
+	deps = [
+		requirement("requests")
+	]
+)
+
+py_library(
+	name = "create_candy_machine",
+	srcs = ["create_candy_machine.py"],
+	deps = [
+		":upload_image",
+		":constants",
+		":account",
+		":client"
+	]
+)
+
+py_library(
+	name = "update_whitelist",
+	srcs = ["update_whitelist.py"],
+	deps = [
+		":constants",
+		":account",
+		":client",
+		":account_address"
+	]
+)
+
+py_binary(
+	name = "cli",
+	srcs = ["cli.py"],
+	data = ["config.txt"],
+	deps = [
+		":update_whitelist",
+		":create_candy_machine",
+		requirement("pick")
+	]
+)

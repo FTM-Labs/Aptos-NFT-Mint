@@ -1,0 +1,23 @@
+{
+    "pinata": {
+        "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        "pinataPublicKey": "",
+        "pinataSecretKey": ""
+    },
+    "candymachine": {
+        "cmPublicKey": "",
+        "cmPrivateKey": ""
+    },
+    "collection": {
+        "assetDir": "",
+        "metadataDir": "",
+        "collectionName": "",
+        "collectionDescription": "",
+        "collectionCover": "",
+        "collectionSize": 0,
+        "mintFee": 0,
+        "presaleMintTime": 0,
+        "publicMintTime": 0,
+        "whitelistDir": ""
+    }
+}

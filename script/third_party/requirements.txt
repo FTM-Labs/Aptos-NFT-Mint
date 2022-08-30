@@ -1,0 +1,4 @@
+pynacl
+requests
+httpx
+pick
