@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css'
+import data from '../../script/src/config.json'
 
 export default function Home() {
   const [sender, setSender] = useState(null)
@@ -27,14 +28,16 @@ export default function Home() {
   const mint = async () => {
     console.log(sender);
     // Generate a transaction
+    const cmAddress = data.candymachine.cmPublicKey;
+    const collectionName = data.collection.collectionName;
     const payload = {
       type: "entry_function_payload",
       function: "0xBDCDFC476D4DB40CBF4BF3B62E3973D10E1CB53B89D915F0815982A78BFCDE1F::candy_machine_v2::mint_tokens",
       type_arguments: [],
       arguments: [
-      	"0xe423e793d2180d96844ca9cdf7954c84e09a33eaf9646c5495b4d1af0b4c9306",
-	"Test collection.",
-	"1",
+      	cmAddress,
+	      collectionName,
+	      "1",
       ]
     };
     const transaction = await window.martian.generateTransaction(sender, payload);
