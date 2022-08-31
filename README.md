@@ -63,6 +63,7 @@ where the `cover.png` is the cover image for the collection.
 You need python version 3.9 and above
 
 ```sh
+cd script/third_party
 pip3 install -r requirements.txt
 ```
 ### Create candy machine
