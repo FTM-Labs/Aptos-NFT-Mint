@@ -14,6 +14,9 @@ A candy machine is an onchain contract which let user to create mint contract fa
 * Simple website with wallet integrated and monitor your candy machine status
 
 ## Getting Set Up
+```sh
+git clone https://github.com/FTM-Labs/AptosNFTMint.git
+```
 
 ### Generate art and metadata
 
@@ -60,6 +63,7 @@ where the `cover.png` is the cover image for the collection.
 You need python version 3.9 and above
 
 ```sh
+cd script/third_party
 pip3 install -r requirements.txt
 ```
 ### Create candy machine
