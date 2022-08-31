@@ -14,7 +14,7 @@ A candy machine is an onchain contract which let user to create mint contract fa
 * Simple website with wallet integrated and monitor your candy machine status
 
 ## Getting Set Up
-'''bash
+'''sh
 git clone https://github.com/FTM-Labs/AptosNFTMint.git
 '''
 
