@@ -7,6 +7,8 @@ export default function Home() {
   const [sender, setSender] = useState(null)
   const [isWalletConnected, setIsWalletConnected] = useState(false)
   const [connenctButtonText, setConnenctButtonText] = useState('Connect');
+  const cmAddress = data.candymachine.cmPublicKey;
+  const collectionName = data.collection.collectionName;
   const connectWallet = async () => {
     if ("martian" in window) {
       console.log("connecting wallet")
@@ -28,16 +30,14 @@ export default function Home() {
   const mint = async () => {
     console.log(sender);
     // Generate a transaction
-    const cmAddress = data.candymachine.cmPublicKey;
-    const collectionName = data.collection.collectionName;
     const payload = {
       type: "entry_function_payload",
-      function: "0xBDCDFC476D4DB40CBF4BF3B62E3973D10E1CB53B89D915F0815982A78BFCDE1F::candy_machine_v2::mint_tokens",
+      function: "0xfc0aba6b7264089f7817c3a2c1faa00601dea0713ee278df54ab6fc543a73e92::candy_machine_v2::mint_tokens",
       type_arguments: [],
       arguments: [
       	cmAddress,
 	      collectionName,
-	      "1",
+	      1,
       ]
     };
     const transaction = await window.martian.generateTransaction(sender, payload);
