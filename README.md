@@ -1,8 +1,8 @@
-# Aptos Candy Machine Mint
+# Aptos NFT Mint
 
-The Aptos Candy Machine Mint project is designed to let users make a mint contract and website ultra fast on Aptos.
+The Aptos NFT Mint project is designed to let users make a mint contract and website ultra fast on Aptos.
 
-A candy machine is an onchain contract which let user to create mint contract fast.
+An onchain contract which let user to create mint contract fast.
 
 ## Features developed
 * Set start and finish time for everyone.
