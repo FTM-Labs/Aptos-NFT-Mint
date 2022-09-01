@@ -1,3 +1,4 @@
+Our twitter: https://twitter.com/FTMTeam1
 # Aptos NFT Mint
 
 The Aptos NFT Mint project is designed to let users make a mint contract and website ultra fast on Aptos.
