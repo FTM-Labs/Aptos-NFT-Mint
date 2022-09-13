@@ -15,7 +15,7 @@ def update():
     _CM_PUBLIC = config['candymachine']['cmPublicKey']
     _CM_PRIVATE = config['candymachine']['cmPrivateKey']
     _PUBLIC_MINT_TIME = int(config['collection']['publicMintTime'])
-    _COLLECTION_NAME = config['collection', 'collectionName']
+    _COLLECTION_NAME = config['collection']['collectionName']
     rest_client = RestClient(NODE_URL)
 
 
