@@ -430,7 +430,7 @@ class RestClient:
             TransactionArgument(50, Serializer.u64),
             TransactionArgument([False, False, False, False, False], Serializer.sequence_serializer(Serializer.bool)),
             TransactionArgument(propertyKeys, Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.str))),
-            TransactionArgument(propertyValues, Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.bytes))),
+            TransactionArgument(propertyValues, Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.u8)))),
             TransactionArgument(propertyTypes, Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.str))),
         ]
 

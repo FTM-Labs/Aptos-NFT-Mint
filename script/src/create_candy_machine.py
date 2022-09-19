@@ -118,7 +118,9 @@ def create():
             for trait in data['attributes']:
                 if isinstance(trait['value'], str): 
                     propertyKey.append(trait['trait_type'])
-                    propertyValue.append(trait['value'].encode())
+                    # todo: wait aptos update on type of property values
+                    #propertyValue.append(trait['value'].encode())
+                    propertyValue.append([1])
                     propertyType.append('String')
         nfts.append(
             NFT(tmp_name, tmp_uri, tmp_description, propertyKey, propertyValue, propertyType)
