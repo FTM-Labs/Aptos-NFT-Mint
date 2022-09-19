@@ -7,12 +7,12 @@ from __future__ import annotations
 import hashlib
 import typing
 
-import ed25519
-from account_address import AccountAddress
-from authenticator import (Authenticator, Ed25519Authenticator,
+from aptos_sdk import ed25519
+from aptos_sdk.account_address import AccountAddress
+from aptos_sdk.authenticator import (Authenticator, Ed25519Authenticator,
                             MultiAgentAuthenticator)
-from bcs import Deserializer, Serializer
-from type_tag import StructTag, TypeTag
+from aptos_sdk.bcs import Deserializer, Serializer
+from aptos_sdk.type_tag import StructTag, TypeTag
 
 
 class RawTransaction:

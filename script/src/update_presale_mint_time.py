@@ -3,9 +3,9 @@ from client import RestClient
 import os
 import sys
 from constants import NODE_URL
-from account_address import AccountAddress
-from account import Account
-import ed25519
+from aptos_sdk.account_address import AccountAddress
+from aptos_sdk.account import Account
+from aptos_sdk import ed25519
 import os
 import json
 

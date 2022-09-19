@@ -1,6 +1,6 @@
 import upload_image
 from constants import NODE_URL, FAUCET_URL
-from account import Account
+from aptos_sdk.account import Account
 from client import FaucetClient, RestClient
 import sys
 import os

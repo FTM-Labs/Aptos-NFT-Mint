@@ -3,15 +3,15 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 
-from account import Account
-from account_address import AccountAddress
-from authenticator import (Authenticator, Ed25519Authenticator,
+from aptos_sdk.account import Account
+from aptos_sdk.account_address import AccountAddress
+from aptos_sdk.authenticator import (Authenticator, Ed25519Authenticator,
                             MultiAgentAuthenticator)
-from bcs import Serializer
+from aptos_sdk.bcs import Serializer
+from aptos_sdk.type_tag import StructTag, TypeTag
 from transactions import (MultiAgentRawTransaction, RawTransaction,
                            EntryFunction, SignedTransaction,
                            TransactionArgument, TransactionPayload)
-from type_tag import StructTag, TypeTag
 from constants import CONTRACT_ADDRESS
 from constants import MAX_GAS
 U64_MAX = 18446744073709551615
