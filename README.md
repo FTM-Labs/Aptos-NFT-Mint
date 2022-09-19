@@ -1,4 +1,8 @@
 Our twitter: https://twitter.com/FTMTeam1
+
+Discord for questions: https://discord.gg/zRPQnmzB
+
+Aptos is still in an early stage, source code keeps changing. We will update as soon as we can, but if you have questions, head into our discord for help.
 # Aptos NFT Mint
 
 The Aptos NFT Mint project is designed to let users make a mint contract and website ultra fast on Aptos.
