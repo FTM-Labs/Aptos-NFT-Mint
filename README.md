@@ -82,7 +82,7 @@ Open config.json under src folder (using VS code or other IDE).
         "collectionDescription": "eg: Follow us on twitter https://twitter.com/FTMTeam1",
         "collectionCover": "this is will be updated autmatically",
         "collectionSize": "e.g:10000",
-        "mintFee": "need to be diveded by 1000, eg: if you want 1 aptos as mint, type 1000",
+        "mintFee": "need to be diveded by 10000000, eg: if you want 1 aptos as mint, type 10000000",
         "presaleMintTime": "Unix timestamp, go to https://www.unixtimestamp.com/, covert your desired time to unix time, eg: 1661257636",
         "publicMintTime": "Unix timestamp, go to https://www.unixtimestamp.com/, covert your desired time to unix time, eg: 1661257636",
         "whitelistDir": "the folder path that contains whitelist.txt."
@@ -110,7 +110,9 @@ under src folder, run
 python3 cli.py
 ```
 Choose "Create candy machine"
-
+Enter yes to if you have transferred at least 2 aptos to candy machine account: yes
+*** on testnet, we automatically deposited 2000 aptos to the candy machine account.
+***Update WL will override the past WL configuration. If you want to add some more wl spots, just add below the previous file and upload it.***
 
 ### WhiteList
 Create a txt file with you white list info
@@ -134,8 +136,6 @@ under src folder, run
 python3 cli.py
 ```
 Choose "Update WL for existing collection"
-
-***Update WL will override the past WL configuration. If you want to add some more wl spots, just add below the previous file and upload it.***
 
 ### Create website
 You need to have npm installed, we are using nextJS to build this simple website
