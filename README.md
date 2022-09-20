@@ -135,6 +135,8 @@ python3 cli.py
 ```
 Choose "Update WL for existing collection"
 
+Enter yes to if you have transferred at least 2 aptos to candy machine account: yes
+*** on testnet, we automatically deposited 2000 aptos to the candy machine account.
 ***Update WL will override the past WL configuration. If you want to add some more wl spots, just add below the previous file and upload it.***
 
 ### Create website
