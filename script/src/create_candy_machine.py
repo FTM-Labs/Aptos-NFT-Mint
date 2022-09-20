@@ -1,13 +1,15 @@
 import upload_image
 from constants import NODE_URL, FAUCET_URL
 from aptos_sdk.account import Account
-from client import FaucetClient, RestClient
+from client import RestClient
+from aptos_sdk.client import FaucetClient
 import sys
 import os
 import random
 import datetime
 from nft import NFT
 import json
+import util
 
 
 def create():
@@ -28,7 +30,7 @@ def create():
 
     print('\n=== Upload assets to IPFS ===')
 
-    upload_image.uploadFolder()
+    util.uploadFolder()
     print('\nSucces: asset ipfs hash can be found in ' + _ASSET_FOLDER + '/image_cid.txt')
 
     # TODO: remove fund account for mainnet and prompt for user to fund account themselves.
@@ -43,7 +45,7 @@ def create():
          json.dump(config, configfile)
     faucet_client.fund_account(alice.address(), 200_0000)
     
-    accountBalance = rest_client.account_balance(alice.address().hex())
+    accountBalance = int (rest_client.account_balance(alice.address().hex()))
     while (True):
         answer = input("Enter yes to if you have transferred at least 2 aptos to candy machine account: ") 
         if answer == "yes": 
@@ -149,14 +151,14 @@ def create():
     print("\n Success, txn hash: " + txn_hash)
 
     #Testing mint
-    # print("\n=== Bob going to mint NFT ===")
-    # bob = Account.generate()
-    # print(f"bob address: {bob.address()}")
-    # print(f'Public key: {alice.address()}\n')
-    # print(f'Private key: {alice.private_key}\n')
-    # faucet_client.fund_account(bob.address(), 200000)
-    # txn_hash = rest_client.mint_tokens(
-    #     user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=5)
+    print("\n=== Bob going to mint NFT ===")
+    bob = Account.generate()
+    print(f"bob address: {bob.address()}")
+    print(f'Public key: {alice.address()}\n')
+    print(f'Private key: {alice.private_key}\n')
+    faucet_client.fund_account(bob.address(), 200000)
+    txn_hash = rest_client.mint_tokens(
+        user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=5)
 
-    # rest_client.wait_for_transaction(txn_hash)
-    # print("\n Success, txn hash: " + txn_hash)
+    rest_client.wait_for_transaction(txn_hash)
+    print("\n Success, txn hash: " + txn_hash)

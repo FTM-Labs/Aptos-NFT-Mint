@@ -1,8 +1,6 @@
 from pick import pick
 import create_candy_machine
-import update_whitelist
-import update_public_mint_time
-import update_presale_mint_time
+import util
 if __name__ == "__main__":
     title = 'Please choose what you want to do: '
     options = [
@@ -14,8 +12,8 @@ if __name__ == "__main__":
     if index == 0 :
         create_candy_machine.create()
     elif index == 1:
-        update_whitelist.update()
+        util.update_whitelist()
     elif index == 2:
-        update_public_mint_time.update()
+        util.update_public_mint_time()
     else:
-        update_presale_mint_time.update()
+        util.update_presale_mint_time()
