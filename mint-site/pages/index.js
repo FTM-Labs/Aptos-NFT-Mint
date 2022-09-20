@@ -8,6 +8,7 @@ export default function Home() {
   const [isWalletConnected, setIsWalletConnected] = useState(false)
   const [connenctButtonText, setConnenctButtonText] = useState('Connect');
   const cmAddress = data.candymachine.cmPublicKey;
+  const coverImg = data.collection.collectionCover;
   const collectionName = data.collection.collectionName;
   const connectWallet = async () => {
     if ("martian" in window) {
@@ -65,7 +66,7 @@ export default function Home() {
           <div className={styles.topcorner}>
             <button className={styles.button} onClick={connectWallet}>{connenctButtonText}</button>
           </div>
-          <img src={"/Aptos.png"} style={{ width: "960px", height:"480px" }} />
+          <img src={coverImg} style={{ width: "480px", height:"480px" }} />
           <div>
             <button className={styles.button} onClick={mint} disabled={!isWalletConnected}>Mint</button>
           </div>

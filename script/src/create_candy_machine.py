@@ -1,4 +1,3 @@
-import upload_image
 from constants import NODE_URL, FAUCET_URL
 from aptos_sdk.account import Account
 from client import RestClient
@@ -13,6 +12,8 @@ import util
 
 
 def create():
+    print('\n=== Upload assets to IPFS ===')
+    util.uploadFolder()
     with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
         config = json.load(f)
     _ASSET_FOLDER = config['collection']['assetDir']
@@ -26,11 +27,6 @@ def create():
     _PRESALE_MINT_TIME = int(config['collection']['presaleMintTime'])
     rest_client = RestClient(NODE_URL)
     faucet_client = FaucetClient(FAUCET_URL, rest_client)
-
-
-    print('\n=== Upload assets to IPFS ===')
-
-    util.uploadFolder()
     print('\nSucces: asset ipfs hash can be found in ' + _ASSET_FOLDER + '/image_cid.txt')
 
     # TODO: remove fund account for mainnet and prompt for user to fund account themselves.

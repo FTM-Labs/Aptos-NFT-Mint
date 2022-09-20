@@ -5,14 +5,10 @@ import httpx
 
 from aptos_sdk.account import Account
 from aptos_sdk.account_address import AccountAddress
-from aptos_sdk.authenticator import (Authenticator, Ed25519Authenticator,
-                            MultiAgentAuthenticator)
+
 from aptos_sdk.bcs import Serializer
-from aptos_sdk.type_tag import StructTag, TypeTag
 from transactions import (EntryFunction, TransactionPayload)
-from aptos_sdk.transactions import (MultiAgentRawTransaction, RawTransaction,
-                            SignedTransaction,
-                           TransactionArgument)
+from aptos_sdk.transactions import TransactionArgument
 from constants import CONTRACT_ADDRESS
 from constants import MAX_GAS
 from aptos_sdk import client

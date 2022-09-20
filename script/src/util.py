@@ -103,10 +103,10 @@ def uploadFolder():
             line = fileName + ' ' + ipfsHash
             if fileName == 'cover':
                 config['collection']['collectionCover'] = constants.IPFS_GATEWAY + '/' + ipfsHash
-                with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
-                    json.dump(config, configfile)
                 continue
             cid_list.append(line)
+    with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
+        json.dump(config, configfile)
     with open(r'image_cid.txt', 'w') as fp:
         for item in cid_list:
             # write each item on a new line
