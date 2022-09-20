@@ -29,9 +29,11 @@ _HEADERS = {
 }
 
 rest_client = RestClient(NODE_URL)
-cmAccount =  Account(
-    AccountAddress.from_hex(_CM_PUBLIC), 
-    ed25519.PrivateKey.from_hex(_CM_PRIVATE))
+
+if _CM_PUBLIC and _CM_PRIVATE:
+    cmAccount =  Account(
+        AccountAddress.from_hex(_CM_PUBLIC), 
+        ed25519.PrivateKey.from_hex(_CM_PRIVATE))
 
 def update_presale_mint_time():
     txn_hash = rest_client.set_presale_mint_time(
