@@ -233,4 +233,4 @@ dist
 .tern-port
 
 # config 
-config.json
+script/src/config.json
