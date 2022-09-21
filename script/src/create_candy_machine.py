@@ -147,14 +147,14 @@ def create():
     print("\n Success, txn hash: " + txn_hash)
 
     #Testing mint
-    print("\n=== Bob going to mint NFT ===")
-    bob = Account.generate()
-    print(f"bob address: {bob.address()}")
-    print(f'Public key: {alice.address()}\n')
-    print(f'Private key: {alice.private_key}\n')
-    faucet_client.fund_account(bob.address(), 200000)
-    txn_hash = rest_client.mint_tokens(
-        user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=5)
+    # print("\n=== Bob going to mint NFT ===")
+    # bob = Account.generate()
+    # print(f"bob address: {bob.address()}")
+    # print(f'Public key: {alice.address()}\n')
+    # print(f'Private key: {alice.private_key}\n')
+    # faucet_client.fund_account(bob.address(), 200000)
+    # txn_hash = rest_client.mint_tokens(
+    #     user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=5)
 
-    rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, txn hash: " + txn_hash)
+    # rest_client.wait_for_transaction(txn_hash)
+    # print("\n Success, txn hash: " + txn_hash)
