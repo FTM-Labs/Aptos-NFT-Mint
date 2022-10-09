@@ -39,7 +39,7 @@ def create():
     config['candymachine']['cmPrivateKey'] = str(alice.private_key)
     with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
          json.dump(config, configfile)
-    faucet_client.fund_account(alice.address(), 200_0000)
+    faucet_client.fund_account(alice.address(), 20000000000)
     
     accountBalance = int (rest_client.account_balance(alice.address().hex()))
     while (True):
@@ -146,15 +146,20 @@ def create():
     rest_client.wait_for_transaction(txn_hash)
     print("\n Success, txn hash: " + txn_hash)
 
-    #Testing mint
-    print("\n=== Bob going to mint NFT ===")
-    bob = Account.generate()
-    print(f"bob address: {bob.address()}")
-    print(f'Public key: {alice.address()}\n')
-    print(f'Private key: {alice.private_key}\n')
-    faucet_client.fund_account(bob.address(), 200000)
-    txn_hash = rest_client.mint_tokens(
-        user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=5)
+    # #Testing mint
+    # print("\n=== Bob going to mint NFT ===")
+    # bob = Account.generate()
+    # print(f"bob address: {bob.address()}")
+    # print(f'Public key: {alice.address()}\n')
+    # print(f'Private key: {alice.private_key}\n')
+    # faucet_client.fund_account(bob.address(), 20000000000)
+    # txn_hash = rest_client.mint_tokens(
+    #     user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=10)
 
-    rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, txn hash: " + txn_hash)
+    # rest_client.wait_for_transaction(txn_hash)
+    # print("\n Success, txn hash: " + txn_hash)
+    # txn_hash = rest_client.mint_tokens(
+    #     user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=10)
+
+    # rest_client.wait_for_transaction(txn_hash)
+    # print("\n Success, txn hash: " + txn_hash)

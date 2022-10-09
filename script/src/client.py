@@ -8,9 +8,11 @@ from aptos_sdk.account_address import AccountAddress
 
 from aptos_sdk.bcs import Serializer
 from transactions import (EntryFunction, TransactionPayload)
-from aptos_sdk.transactions import TransactionArgument
+from aptos_sdk.transactions import (RawTransaction,SignedTransaction, TransactionArgument)
+from aptos_sdk.authenticator import (Authenticator, Ed25519Authenticator)
 from constants import CONTRACT_ADDRESS
 from constants import MAX_GAS
+from constants import GAS_UNIT
 from aptos_sdk import client
 U64_MAX = 18446744073709551615
 
@@ -24,6 +26,24 @@ class RestClient(client.RestClient):
     def __init__(self, base_url: str):
         super().__init__(base_url)
 
+    def create_single_signer_bcs_transaction(
+        self, sender: Account, payload: TransactionPayload
+    ) -> SignedTransaction:
+        raw_transaction = RawTransaction(
+            sender.address(),
+            self.account_sequence_number(sender.address()),
+            payload,
+            MAX_GAS,
+            GAS_UNIT,
+            int(time.time()) + 600,
+            self.chain_id,
+        )
+
+        signature = sender.sign(raw_transaction.keyed())
+        authenticator = Authenticator(
+            Ed25519Authenticator(sender.public_key(), signature)
+        )
+        return SignedTransaction(raw_transaction, authenticator)
     #
     # Token transaction wrappers
     #
