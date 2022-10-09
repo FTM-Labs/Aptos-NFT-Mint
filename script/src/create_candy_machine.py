@@ -152,12 +152,8 @@ def create():
     # print(f"bob address: {bob.address()}")
     # print(f'Public key: {alice.address()}\n')
     # print(f'Private key: {alice.private_key}\n')
-    # faucet_client.fund_account(bob.address(), 20000000000)
-    # txn_hash = rest_client.mint_tokens(
-    #     user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=10)
 
-    # rest_client.wait_for_transaction(txn_hash)
-    # print("\n Success, txn hash: " + txn_hash)
+    # faucet_client.fund_account(bob.address(), 20000000000)
     # txn_hash = rest_client.mint_tokens(
     #     user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=10)
 

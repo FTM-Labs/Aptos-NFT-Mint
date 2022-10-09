@@ -10,6 +10,7 @@ import os
 import json
 import requests
 import constants
+import datetime
 
 with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
     config = json.load(f)
@@ -40,14 +41,14 @@ def update_presale_mint_time():
         cmAccount, _COLLECTION_NAME, _PRESALE_MINT_TIME
     )
     rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, txn hash: " + txn_hash)
+    print("\n Success, presale mint time is set to: " + str (datetime.datetime.fromtimestamp(_PRESALE_MINT_TIME)) + " txn hash: " + txn_hash)
 
 def update_public_mint_time():
     txn_hash = rest_client.set_public_mint_time(
         cmAccount, _COLLECTION_NAME, _PUBLIC_MINT_TIME
     )
     rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, txn hash: " + txn_hash)
+    print("\n Success, public mint time is set to: " + str(datetime.datetime.fromtimestamp(_PUBLIC_MINT_TIME)) + " txn hash: " + txn_hash)
 
 def update_whitelist():
     tmp_file = open(_WL_DIR + '/whitelist.txt', 'r')
