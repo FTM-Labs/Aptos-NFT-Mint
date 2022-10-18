@@ -16,6 +16,7 @@ with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
     config = json.load(f)
 _CM_PUBLIC = config['candymachine']['cmPublicKey']
 _CM_PRIVATE = config['candymachine']['cmPrivateKey']
+_MINT_FEE_PER_MILLE = int(config['collection']['mintFee'])
 _PRESALE_MINT_TIME = int(config['collection']['presaleMintTime'])
 _PUBLIC_MINT_TIME = int(config['collection']['publicMintTime'])
 _COLLECTION_NAME = config['collection']['collectionName']
@@ -35,6 +36,13 @@ if _CM_PUBLIC and _CM_PRIVATE:
     cmAccount =  Account(
         AccountAddress.from_hex(_CM_PUBLIC), 
         ed25519.PrivateKey.from_hex(_CM_PRIVATE))
+
+def update_mint_fee():
+    txn_hash = est_client.set_mint_fee_per_mille(
+        cmAccount, _COLLECTION_NAME, _MINT_FEE_PER_MILLE
+    )
+    rest_client.wait_for_transaction(txn_hash)
+    print("\n Success, mint fee per mille is set to:: " + _MINT_FEE_PER_MILLE + " txn hash: " + txn_hash)
 
 def update_presale_mint_time():
     txn_hash = rest_client.set_presale_mint_time(

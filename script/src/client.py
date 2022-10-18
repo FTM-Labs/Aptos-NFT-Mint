@@ -149,7 +149,6 @@ class RestClient(client.RestClient):
         return self.submit_bcs_transaction(signed_transaction)
 
     def set_mint_fee_per_mille(
-
         self,
         account: Account,
         name: str,
