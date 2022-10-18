@@ -85,7 +85,6 @@ def create():
     rest_client.wait_for_transaction(txn_hash)
     print("\n Success, public mint time is set to: " + str(datetime.datetime.fromtimestamp(_PUBLIC_MINT_TIME)) + " txn hash: " + txn_hash)
 
-
     print("\n=== Uploading NFT ===")
     tmp_file = open(_ASSET_FOLDER + '/image_cid.txt', 'r')
     lines = tmp_file.readlines()

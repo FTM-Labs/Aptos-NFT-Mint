@@ -1,23 +1,23 @@
 {
     "pinata": {
         "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        "pinataPublicKey": "",
-        "pinataSecretKey": ""
+        "pinataPublicKey": "7a48a0e29df9d872f129",
+        "pinataSecretKey": "2ae26d4288e7cb9ceef391b514ab0e3bcce863227a8c5181869db5350428b511"
     },
     "candymachine": {
-        "cmPublicKey": "",
-        "cmPrivateKey": ""
+        "cmPublicKey": "0x2e4c79677eaf195c4dba4b509455aaaf5acf5a1c92ff736d23e2b9006b52d6fb",
+        "cmPrivateKey": "0xcffb99142ef86b46ed6e17e5af1691216a59024d49b9b155ca035151957e3776"
     },
     "collection": {
-        "assetDir": "",
-        "metadataDir": "",
-        "collectionName": "",
-        "collectionDescription": "",
-        "collectionCover": "",
-        "collectionSize": 0,
-        "mintFee": 0,
-        "presaleMintTime": 0,
-        "publicMintTime": 0,
-        "whitelistDir": ""
+        "assetDir": "/Users/Shared/assets/images",
+        "metadataDir": "/Users/Shared/assets/metadata",
+        "collectionName": "TestCollection101",
+        "collectionDescription": "placeholder",
+        "collectionCover": "https://cloudflare-ipfs.com/ipfs//QmVsudH4sHELLHfaw3mYsX55zMXa2vpPAEvPsdPAV9Kwfx",
+        "collectionSize": 10,
+        "mintFee": 0.5,
+        "presaleMintTime": 100000000,
+        "publicMintTime": 100000000,
+        "whitelistDir": "/Users/Shared/assets"
     }
 }
