@@ -26,7 +26,7 @@ def create():
     _PUBLIC_MINT_TIME = int(config['collection']['publicMintTime'])
     _PRESALE_MINT_TIME = int(config['collection']['presaleMintTime'])
     rest_client = RestClient(NODE_URL)
-    faucet_client = FaucetClient(FAUCET_URL, rest_client)
+    #faucet_client = FaucetClient(FAUCET_URL, rest_client)
     print('\nSucces: asset ipfs hash can be found in ' + _ASSET_FOLDER + '/image_cid.txt')
 
     # TODO: remove fund account for mainnet and prompt for user to fund account themselves.
@@ -39,7 +39,7 @@ def create():
     config['candymachine']['cmPrivateKey'] = str(alice.private_key)
     with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
          json.dump(config, configfile)
-    faucet_client.fund_account(alice.address(), 20000000000)
+    #faucet_client.fund_account(alice.address(), 20000000000)
     
     accountBalance = int (rest_client.account_balance(alice.address().hex()))
     while (True):

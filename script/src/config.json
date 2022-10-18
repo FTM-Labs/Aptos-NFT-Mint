@@ -5,8 +5,8 @@
         "pinataSecretKey": "2ae26d4288e7cb9ceef391b514ab0e3bcce863227a8c5181869db5350428b511"
     },
     "candymachine": {
-        "cmPublicKey": "0x2e4c79677eaf195c4dba4b509455aaaf5acf5a1c92ff736d23e2b9006b52d6fb",
-        "cmPrivateKey": "0xcffb99142ef86b46ed6e17e5af1691216a59024d49b9b155ca035151957e3776"
+        "cmPublicKey": "0x30957ce23fa2e31cb10766e27e950cf8aa2245e3273f2e18b2ef84ad4870cd9e",
+        "cmPrivateKey": "0xa7a92445f1279e811eae9f2c7ec43f834d93115c40c30a38ce384e27ec6eb856"
     },
     "collection": {
         "assetDir": "/Users/Shared/assets/images",
@@ -15,7 +15,7 @@
         "collectionDescription": "placeholder",
         "collectionCover": "https://cloudflare-ipfs.com/ipfs//QmVsudH4sHELLHfaw3mYsX55zMXa2vpPAEvPsdPAV9Kwfx",
         "collectionSize": 10,
-        "mintFee": 0.5,
+        "mintFee": 10,
         "presaleMintTime": 100000000,
         "publicMintTime": 100000000,
         "whitelistDir": "/Users/Shared/assets"
