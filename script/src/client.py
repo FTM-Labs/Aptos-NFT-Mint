@@ -148,6 +148,29 @@ class RestClient(client.RestClient):
         )
         return self.submit_bcs_transaction(signed_transaction)
 
+    def set_mint_fee_per_mille(
+
+        self,
+        account: Account,
+        name: str,
+        mint_fee_per_mille: int
+    ) -> str:
+        transaction_arguments = [
+            TransactionArgument(name, Serializer.str),
+            TransactionArgument(mint_fee_per_mille, Serializer.u64),
+        ]
+
+        payload = EntryFunction.natural(
+            CONTRACT_ADDRESS,
+            "set_mint_fee",
+            [],
+            transaction_arguments,
+        )
+        signed_transaction = self.create_single_signer_bcs_transaction(
+            account, TransactionPayload(payload)
+        )
+        return self.submit_bcs_transaction(signed_transaction)
+
     def set_public_mint_time(
         self,
         account: Account,
