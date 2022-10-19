@@ -1,6 +1,6 @@
 from asyncio import constants
 from constants import NODE_URL, FAUCET_URL, MODE
-from aptos_sdk.account import Account
+from aptos_sdk.account import Account, AccountAddress, ed25519
 from client import RestClient
 from aptos_sdk.client import FaucetClient
 import sys
@@ -25,6 +25,8 @@ def create():
     _MINT_FEE = int(config['collection']['mintFee'])
     _PUBLIC_MINT_TIME = int(config['collection']['publicMintTime'])
     _PRESALE_MINT_TIME = int(config['collection']['presaleMintTime'])
+    _ACCOUNT_ADDRESS = int(config['candymachine']['account_address'])
+    _ACCOUNT_PRIVATE_KEY = int(config['candymachine']['account_private_key'])
     rest_client = RestClient(NODE_URL)
     
     print('\nSucces: asset ipfs hash can be found in ' + _ASSET_FOLDER + '/image_cid.txt')
@@ -32,7 +34,9 @@ def create():
     # TODO: remove fund account for mainnet and prompt for user to fund account themselves.
 
     print("\n=== Preparing Candy Machine account ===")
-    alice = Account.generate()
+    accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
+    privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
+    alice = Account(accountAddres, privateKey)
     print(f'Public key: {alice.address()}\n')
     print(f'Private key: {alice.private_key}\n')
     config['candymachine']['cmPublicKey'] = str(alice.address())
@@ -45,7 +49,7 @@ def create():
     
     accountBalance = int (rest_client.account_balance(alice.address().hex()))
     while (True):
-        answer = input("Enter yes to if you have transferred at least 2 aptos to candy machine account: ") 
+        answer = input("Enter yes if you have some aptos in your account: ") 
         if answer == "yes": 
             if accountBalance > 2000:
                 print(f'Balance: {accountBalance}\n')

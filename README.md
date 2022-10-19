@@ -92,7 +92,16 @@ Open config.json under src folder (using VS code or other IDE).
         "whitelistDir": "the folder path that contains whitelist.txt."
     }
 ```
-
+#### Candymachine metadata
+```
+    "candymachine": {
+        "cmPublicKey": "",
+        "cmPrivateKey": "",
+        "account_address": "",
+        "account_private_key": ""
+    },
+```
+leave `cmPublicKey` and `cmPrivateKey` blank. You need to have an account with some funds in it and put the account address and private key. This is used to create you candy machine, so make sure you have some funds to cover the gas.
 #### Pinata API key
 We will be using [Pinata](https://www.pinata.cloud/?gclid=CjwKCAjwu5yYBhAjEiwAKXk_eKjm7QEJ2EiRMrXVFVECHFCmRmuHj3btPYzJCxhBLU7XdN0np5vTdBoC6n0QAvD_BwE) to batch upload your images and metadata to ipfs. Pinata is the most used service for upload NFT images and metadata to ipfs.
 
