@@ -134,8 +134,8 @@ def create():
         propertyValues.append(nft.propertyValue)
         propertyTypes.append(nft.propertyType)
 
-    # batch upload 200 nft at a time
-    batch_num = 1
+    # batch upload x nft at a time
+    batch_num = 100
     num_batch = len(all_token_names) // batch_num
     remainder = len(all_token_names) % batch_num
     for i in range(num_batch):
