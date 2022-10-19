@@ -23,6 +23,10 @@ An onchain contract which let user to create mint contract fast.
 git clone https://github.com/FTM-Labs/AptosNFTMint.git
 ```
 
+## Switch network
+go to `util.py` and change `MODE` to be 'mainet' or 'devnet'.
+
+
 ### Generate art and metadata
 
 Thre are a bunch of solutions to generate NFT art and metadata. We recommend to use [HashLips](https://github.com/HashLips/hashlips_art_engine).
