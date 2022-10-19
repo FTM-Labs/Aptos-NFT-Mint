@@ -34,9 +34,12 @@ def create():
     # TODO: remove fund account for mainnet and prompt for user to fund account themselves.
 
     print("\n=== Preparing Candy Machine account ===")
-    accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
-    privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
-    alice = Account(accountAddres, privateKey)
+    if MODE == "test":
+        alice = Account.generate()
+    else:
+        accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
+        privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
+        alice = Account(accountAddres, privateKey)
     print(f'Public key: {alice.address()}\n')
     print(f'Private key: {alice.private_key}\n')
     config['candymachine']['cmPublicKey'] = str(alice.address())
