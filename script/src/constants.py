@@ -1,6 +1,7 @@
 import os
-import util
-if util.MODE == "test":
+
+MODE = "test"
+if MODE == "test":
     NODE_URL = os.getenv("APTOS_NODE_URL", "https://fullnode.devnet.aptoslabs.com/v1")
     FAUCET_URL = os.getenv("APTOS_FAUCET_URL", "https://faucet.devnet.aptoslabs.com")
 else:

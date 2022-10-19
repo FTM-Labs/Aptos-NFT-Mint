@@ -1,4 +1,5 @@
-from constants import NODE_URL, FAUCET_URL
+from asyncio import constants
+from constants import NODE_URL, FAUCET_URL, MODE
 from aptos_sdk.account import Account
 from client import RestClient
 from aptos_sdk.client import FaucetClient
@@ -10,7 +11,6 @@ from nft import NFT
 import json
 import util
 
-MODE = "test"
 def create():
     print('\n=== Upload assets to IPFS ===')
     util.uploadFolder()
@@ -134,18 +134,51 @@ def create():
         propertyValues.append(nft.propertyValue)
         propertyTypes.append(nft.propertyType)
 
-
-    txn_hash = rest_client.upload_nft(
-        alice, 
-        _COLLECTION_NAME, 
-        all_token_names, all_descrips, 
-        all_uri, 
-        propertyKeys,
-        propertyValues,
-        propertyTypes
-    )
-    rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, txn hash: " + txn_hash)
+    # batch upload 200 nft at a time
+    batch_num = 1
+    num_batch = len(all_token_names) // batch_num
+    remainder = len(all_token_names) % batch_num
+    for i in range(num_batch):
+        print(f"batch iter:{i}")
+        startIndex = i * batch_num
+        endIndex = startIndex + batch_num
+        batch_token_names = all_token_names[startIndex:endIndex]
+        batch_descrips = all_descrips[startIndex:endIndex]
+        batch_uri = all_uri[startIndex:endIndex]
+        batch_property_keys = propertyKeys[startIndex:endIndex]
+        batch_property_values = propertyValues[startIndex:endIndex]
+        batch_property_types = propertyTypes[startIndex:endIndex]
+        txn_hash = rest_client.upload_nft(
+            alice, 
+            _COLLECTION_NAME, 
+            batch_token_names, batch_descrips, 
+            batch_uri, 
+            batch_property_keys,
+            batch_property_values,
+            batch_property_types
+        )
+        rest_client.wait_for_transaction(txn_hash)
+        print("\n Success, txn hash: " + txn_hash)
+    if remainder:
+        startIndex = num_batch*batch_num
+        endIndex = len(all_token_names)
+        batch_token_names = all_token_names[startIndex:endIndex]
+        batch_descrips = all_descrips[startIndex:endIndex]
+        batch_uri = all_uri[startIndex:endIndex]
+        batch_property_keys = propertyKeys[startIndex:endIndex]
+        batch_property_values = propertyValues[startIndex:endIndex]
+        batch_property_types = propertyTypes[startIndex:endIndex]
+        txn_hash = rest_client.upload_nft(
+            alice, 
+            _COLLECTION_NAME, 
+            batch_token_names, batch_descrips, 
+            batch_uri, 
+            batch_property_keys,
+            batch_property_values,
+            batch_property_types
+        )
+        rest_client.wait_for_transaction(txn_hash)
+        print("\n Success, txn hash: " + txn_hash)
 
     # #Testing mint
     # print("\n=== Bob going to mint NFT ===")

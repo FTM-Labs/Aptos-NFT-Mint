@@ -12,7 +12,7 @@ import requests
 import constants
 import datetime
 
-MODE = "Test"
+
 with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
     config = json.load(f)
 _CM_PUBLIC = config['candymachine']['cmPublicKey']
