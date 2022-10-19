@@ -1,8 +1,14 @@
 {
-    "pinata": {
-        "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        "pinataPublicKey": "7a48a0e29df9d872f129",
-        "pinataSecretKey": "2ae26d4288e7cb9ceef391b514ab0e3bcce863227a8c5181869db5350428b511"
+    "storage": {
+        "solution": "pinata",
+        "pinata": {
+            "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
+            "pinataPublicKey": "7a48a0e29df9d872f129",
+            "pinataSecretKey": "2ae26d4288e7cb9ceef391b514ab0e3bcce863227a8c5181869db5350428b511"
+        },
+        "arweave": {
+            "keyfilePath": "/Users/Shared/arweave-keyfile.json"
+        }
     },
     "candymachine": {
         "cmPublicKey": "0x30957ce23fa2e31cb10766e27e950cf8aa2245e3273f2e18b2ef84ad4870cd9e",
@@ -16,6 +22,8 @@
         "collectionCover": "https://cloudflare-ipfs.com/ipfs//QmVsudH4sHELLHfaw3mYsX55zMXa2vpPAEvPsdPAV9Kwfx",
         "collectionSize": 10,
         "mintFee": 10,
+        "royalty_points_denominator": 1000,
+        "royalty_points_numerator": 100,
         "presaleMintTime": 100000000,
         "publicMintTime": 100000000,
         "whitelistDir": "/Users/Shared/assets"
