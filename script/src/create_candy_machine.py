@@ -25,8 +25,8 @@ def create():
     _MINT_FEE = int(config['collection']['mintFee'])
     _PUBLIC_MINT_TIME = int(config['collection']['publicMintTime'])
     _PRESALE_MINT_TIME = int(config['collection']['presaleMintTime'])
-    _ACCOUNT_ADDRESS = int(config['candymachine']['account_address'])
-    _ACCOUNT_PRIVATE_KEY = int(config['candymachine']['account_private_key'])
+    _ACCOUNT_ADDRESS = config['candymachine']['account_address']
+    _ACCOUNT_PRIVATE_KEY = config['candymachine']['account_private_key']
     rest_client = RestClient(NODE_URL)
     
     print('\nSucces: asset ipfs hash can be found in ' + _ASSET_FOLDER + '/image_cid.txt')
@@ -35,7 +35,12 @@ def create():
 
     print("\n=== Preparing Candy Machine account ===")
     if MODE == "test":
-        alice = Account.generate()
+        # alice = Account.generate()
+        # faucet_client = FaucetClient(FAUCET_URL, rest_client)
+        # faucet_client.fund_account(alice.address(), 20000000000)
+        accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
+        privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
+        alice = Account(accountAddres, privateKey)
     else:
         accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
         privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
@@ -46,9 +51,6 @@ def create():
     config['candymachine']['cmPrivateKey'] = str(alice.private_key)
     with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
          json.dump(config, configfile)
-    if MODE == "test":
-        faucet_client = FaucetClient(FAUCET_URL, rest_client)
-        faucet_client.fund_account(alice.address(), 20000000000)
     
     accountBalance = int (rest_client.account_balance(alice.address().hex()))
     while (True):
