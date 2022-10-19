@@ -24,7 +24,7 @@ git clone https://github.com/FTM-Labs/AptosNFTMint.git
 ```
 
 ## Switch network
-go to `util.py` and change `MODE` to be 'mainet' or 'devnet'.
+go to `constants.py` and change `MODE` to be 'test' for using 'devnet' or 'mainnet' for using 'mainnet'.
 
 
 ### Generate art and metadata
