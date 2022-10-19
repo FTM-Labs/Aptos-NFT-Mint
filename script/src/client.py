@@ -152,11 +152,11 @@ class RestClient(client.RestClient):
         self,
         account: Account,
         name: str,
-        mint_fee_per_mille: float
+        mint_fee_per_mille: int
     ) -> str:
         transaction_arguments = [
             TransactionArgument(name, Serializer.str),
-            TransactionArgument(int(mint_fee_per_mille * 100000000), Serializer.u64),
+            TransactionArgument(mint_fee_per_mille, Serializer.u64),
         ]
 
         payload = EntryFunction.natural(

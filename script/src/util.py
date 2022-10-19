@@ -17,7 +17,7 @@ with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
     config = json.load(f)
 _CM_PUBLIC = config['candymachine']['cmPublicKey']
 _CM_PRIVATE = config['candymachine']['cmPrivateKey']
-_MINT_FEE_PER_MILLE = float(config['collection']['mintFee'])
+_MINT_FEE_PER_MILLE = int(config['collection']['mintFee'])
 _PRESALE_MINT_TIME = int(config['collection']['presaleMintTime'])
 _PUBLIC_MINT_TIME = int(config['collection']['publicMintTime'])
 _COLLECTION_NAME = config['collection']['collectionName']
