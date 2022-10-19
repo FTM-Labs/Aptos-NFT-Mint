@@ -10,8 +10,10 @@ import datetime
 from nft import NFT
 import json
 import util
+import time
 
 def create():
+    print(f"Mode: {MODE}")
     print('\n=== Upload assets to IPFS ===')
     util.uploadFolder()
     with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
@@ -34,10 +36,11 @@ def create():
     # TODO: remove fund account for mainnet and prompt for user to fund account themselves.
 
     print("\n=== Preparing Candy Machine account ===")
-    if MODE == "test":
+    if MODE == "dev":
         # alice = Account.generate()
         # faucet_client = FaucetClient(FAUCET_URL, rest_client)
-        # faucet_client.fund_account(alice.address(), 20000000000)
+        # for i in range (20):
+        #     faucet_client.fund_account(alice.address(), 200000000000)
         accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
         privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
         alice = Account(accountAddres, privateKey)
@@ -144,7 +147,7 @@ def create():
         propertyTypes.append(nft.propertyType)
 
     # batch upload x nft at a time
-    batch_num = 100
+    batch_num = 15
     num_batch = len(all_token_names) // batch_num
     remainder = len(all_token_names) % batch_num
     for i in range(num_batch):
@@ -157,17 +160,26 @@ def create():
         batch_property_keys = propertyKeys[startIndex:endIndex]
         batch_property_values = propertyValues[startIndex:endIndex]
         batch_property_types = propertyTypes[startIndex:endIndex]
-        txn_hash = rest_client.upload_nft(
-            alice, 
-            _COLLECTION_NAME, 
-            batch_token_names, batch_descrips, 
-            batch_uri, 
-            batch_property_keys,
-            batch_property_values,
-            batch_property_types
-        )
+        txn_hash = rest_client.upload_nft(alice, _COLLECTION_NAME, batch_token_names, batch_descrips, batch_uri, batch_property_keys,batch_property_values,batch_property_types)
         rest_client.wait_for_transaction(txn_hash)
         print("\n Success, txn hash: " + txn_hash)
+        # while True:
+        #     try:
+        #         txn_hash = rest_client.upload_nft(
+        #         alice, 
+        #         _COLLECTION_NAME, 
+        #         batch_token_names, batch_descrips, 
+        #         batch_uri, 
+        #         batch_property_keys,
+        #         batch_property_values,
+        #         batch_property_types)
+        #         rest_client.wait_for_transaction(txn_hash)
+        #         print("\n Success, txn hash: " + txn_hash)
+        #     except:
+        #         print("error")
+        #         continue
+        #     break
+        
     if remainder:
         startIndex = num_batch*batch_num
         endIndex = len(all_token_names)
@@ -177,18 +189,25 @@ def create():
         batch_property_keys = propertyKeys[startIndex:endIndex]
         batch_property_values = propertyValues[startIndex:endIndex]
         batch_property_types = propertyTypes[startIndex:endIndex]
-        txn_hash = rest_client.upload_nft(
-            alice, 
-            _COLLECTION_NAME, 
-            batch_token_names, batch_descrips, 
-            batch_uri, 
-            batch_property_keys,
-            batch_property_values,
-            batch_property_types
-        )
+        txn_hash = rest_client.upload_nft(alice, _COLLECTION_NAME, batch_token_names, batch_descrips, batch_uri, batch_property_keys,batch_property_values,batch_property_types)
         rest_client.wait_for_transaction(txn_hash)
         print("\n Success, txn hash: " + txn_hash)
-
+        # while True:
+        #     try:
+        #         txn_hash = rest_client.upload_nft(
+        #             alice, 
+        #             _COLLECTION_NAME, 
+        #             batch_token_names, batch_descrips, 
+        #             batch_uri, 
+        #             batch_property_keys,
+        #             batch_property_values,
+        #             batch_property_types
+        #         )
+        #         rest_client.wait_for_transaction(txn_hash)
+        #         print("\n Success, txn hash: " + txn_hash)
+        #     except:
+        #         continue
+        #     break
     # #Testing mint
     # print("\n=== Bob going to mint NFT ===")
     # bob = Account.generate()
