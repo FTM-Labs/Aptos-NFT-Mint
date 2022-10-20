@@ -14,10 +14,6 @@ import Spinner from "react-bootstrap/Spinner"
 const aptosClient = new AptosClient(NODE_URL);
 
 export default function Home() {
-  // const [sender, setSender] = useState(null)
-  // const [isWalletConnected, setIsWalletConnected] = useState(false)
-  // const [connenctButtonText, setConnenctButtonText] = useState('Connect');
-
   const wallet = useWallet();
   const [numToMint, setNumToMint] = useState(1)
   const [candyMachineData, setCandyMachineData] = useState({data: {}, fetching: false, fetch: fetchCandyMachineData})
