@@ -153,13 +153,13 @@ Choose "Update WL for existing collection"
 ### Create website
 You need to have npm installed, we are using nextJS to build this simple website
 
-change the values in mint-site/helpers/candyMachineInfo.js:
+change the values in mint-site/helpers/candyMachineInfo.js - can find those info in your config.json:
 
-export const candyMachineAddress = "0xbfa1e58b2846eb08cd27a04face5c3b918c0e6382f16619ce4bc8395c6d59024"; // YOUR CM ADDRESS
-
-export const collectionName = "collection name"; // THE NAME OF YOUR COLLECTION (Case sensitive!)
-
-export const collectionCoverUrl = "https://cloudflare-ipfs.com/ipfs/QmPJXqjBKPJq15ZQBqn6ZrcFRb546emUYSnpkXKjCXZPxy"; // THE COVER LINK, CAN FIND IT IN config.json
+```txt
+export const candyMachineAddress = "YOUR CM ADDRESS";
+export const collectionName = "collection name(Case sensitive!)";
+export const collectionCoverUrl = " THE COVER LINK eg: https://cloudflare-ipfs.com/ipfs/asjdhasjhd"; 
+```txt
 
 open mint-site folder, run
 
