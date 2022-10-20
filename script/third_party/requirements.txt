@@ -3,5 +3,5 @@ requests
 httpx
 pick
 aptos-sdk
-pillow
-arweave
+Pillow
+arweave-python-client
