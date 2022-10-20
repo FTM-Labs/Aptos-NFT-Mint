@@ -1,6 +1,6 @@
 Our twitter: https://twitter.com/FTMTeam1
 
-Discord for questions: https://discord.gg/zRPQnmzB
+Discord for questions: https://discord.gg/6ZPvDCR8Xd
 
 Aptos is still in an early stage, source code keeps changing. We will update as soon as we can, but if you have questions, head into our discord for help.
 # Aptos NFT Mint
@@ -155,7 +155,7 @@ You need to have npm installed, we are using nextJS to build this simple website
 open mint-site folder, run
 
 ```bash
-npm install next react react-dom
+npm install
 ```
 
 then run
