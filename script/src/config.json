@@ -21,6 +21,7 @@
         "collectionDescription": "placeholder",
         "collectionCover": "https://cloudflare-ipfs.com/ipfs//QmVsudH4sHELLHfaw3mYsX55zMXa2vpPAEvPsdPAV9Kwfx",
         "collectionSize": 10,
+        "maxMintPerWallet": 3,
         "mintFee": 10,
         "royalty_points_denominator": 1000,
         "royalty_points_numerator": 100,

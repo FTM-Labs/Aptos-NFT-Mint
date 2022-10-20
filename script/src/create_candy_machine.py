@@ -28,6 +28,7 @@ def create():
     _COLLECTION_DESCRIPTION = config['collection']['collectionDescription']
     _COLLECTION_COVER = config['collection']['collectionCover']
     _COLLECTION_SIZE = int(config['collection']['collectionSize'])
+    _MAX_MINTS_PER_WALLET = int(config['collection']['maxMintPerWallet'])
     _MINT_FEE = int(config['collection']['mintFee'])
     _ROYALTY_POINTS_DENOMINATOR = config['collection']['royalty_points_denominator']
     _ROYALTY_POINTS_NUMERATOR = config['collection']['royalty_points_numerator']
@@ -87,7 +88,7 @@ def create():
         _COLLECTION_NAME, 
         _COLLECTION_DESCRIPTION, 
         _COLLECTION_COVER,
-        _COLLECTION_SIZE,
+        _MAX_MINTS_PER_WALLET,
         _MINT_FEE,
         _PUBLIC_MINT_TIME,
         _PRESALE_MINT_TIME
