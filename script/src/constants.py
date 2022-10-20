@@ -12,7 +12,7 @@ else:
     FAUCET_URL=None
 
 
-CONTRACT_ADDRESS = "0x5ac985f1fe40c5121eb33699952ce8a79b1d1cb7438709dbd1da8e840a04fbee::candy_machine_v2"
+CONTRACT_ADDRESS = "0xdcd69bc972f11bfbc3de6a8b656b66a227fe4d38c8880c781e8bf8785195e1a9::candy_machine_v2"
 MAX_GAS = 200000
 GAS_UNIT = 100
 IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/"
