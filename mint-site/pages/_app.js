@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
 import '../styles/globals.css'
 
 import {
@@ -13,6 +14,7 @@ import {
   RiseWalletAdapter,
   FletchWalletAdapter
 } from '@manahippo/aptos-wallet-adapter';
+import { ToastContainer } from 'react-toastify';
 
 function MyApp({ Component, pageProps }) {
   const wallets = [
@@ -34,6 +36,7 @@ function MyApp({ Component, pageProps }) {
         console.log('Handle Error Message', error);
       }}>
         <Component {...pageProps} />
+        <ToastContainer />
     </WalletProvider>
 }
 
