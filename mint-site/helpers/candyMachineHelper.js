@@ -7,9 +7,7 @@ async function getCandyMachineResourceAccount() {
     const resources = response.data;
 
     for (const resource of resources) {
-        console.log(resource.type)
-        if (resource.type === "0x5ac985f1fe40c5121eb33699952ce8a79b1d1cb7438709dbd1da8e840a04fbee::candy_machine_v2::ResourceData") {
-            console.log(resource.data.resource_account.account)
+        if (resource.type === "0xdcd69bc972f11bfbc3de6a8b656b66a227fe4d38c8880c781e8bf8785195e1a9::candy_machine_v2::ResourceData") {
             return resource.data.resource_account.account;
         }
     }
@@ -32,7 +30,7 @@ async function getCandyMachineCollectionInfo(
             collectionInfo.tokenDataHandle = resource.data.token_data.handle;
             continue;
         }
-        if (resource.type === "0x5ac985f1fe40c5121eb33699952ce8a79b1d1cb7438709dbd1da8e840a04fbee::candy_machine_v2::CollectionConfigs") {
+        if (resource.type === "0xdcd69bc972f11bfbc3de6a8b656b66a227fe4d38c8880c781e8bf8785195e1a9::candy_machine_v2::CollectionConfigs") {
             collectionInfo.candyMachineConfigHandle = resource.data.collection_configs.handle;
         }
     }
@@ -45,7 +43,7 @@ async function getCandyMachineConfigData(
 ) {
     const data = JSON.stringify({
         "key_type": "vector<u8>",
-        "value_type": "0x5ac985f1fe40c5121eb33699952ce8a79b1d1cb7438709dbd1da8e840a04fbee::candy_machine_v2::CollectionConfig",
+        "value_type": "0xdcd69bc972f11bfbc3de6a8b656b66a227fe4d38c8880c781e8bf8785195e1a9::candy_machine_v2::CollectionConfig",
         "key": stringToHex(collectionName)
     });
     const customConfig = {
@@ -59,13 +57,41 @@ async function getCandyMachineConfigData(
 
     const isPublic = cmConfigData.is_public;
     const maxMintsPerWallet = cmConfigData.max_supply_per_user;
-    const mintFee = cmConfigData.mint_fee_per_mille / 100000000;
+    const mintFee = cmConfigData.mint_fee_per_mille / 1000000;
     const presaleMintTime = cmConfigData.presale_mint_time;
     const publicMintTime = cmConfigData.public_mint_time;
 
     return {isPublic, maxMintsPerWallet, mintFee, presaleMintTime, publicMintTime}
 }
 
+async function getMintedNfts(aptosClient, collectionTokenDataHandle, cmResourceAccount, collectionName, txInfo) {
+    const mintedNfts = [];
+    for (const event of txInfo.events) {
+        if (event["type"] !== "0x3::token::MintTokenEvent") continue
+        const mintedNft = {
+            name: event["data"]["id"]["name"],
+            imageUri: null
+        }
+        try {
+            mintedNft.imageUri = (await aptosClient.getTableItem(collectionTokenDataHandle, {
+                "key_type": "0x3::token::TokenDataId",
+                "value_type": "0x3::token::TokenData",
+                "key": {
+                    "creator": cmResourceAccount,
+                    "collection": collectionName,
+                    "name": mintedNft.name
+                }
+            })).uri
+        } catch (err) {
+            console.error(err);
+        }
+        mintedNfts.push(mintedNft)
+    }
+
+    console.log("Minted NFTs")
+    console.log(mintedNfts)
+    return mintedNfts
+}
 
 
 
@@ -79,7 +105,7 @@ function stringToHex(str) {
 }
 
 export function getTimeDifference(current, next) {
-    if (next < current) return "NOW"
+    if (next < current) return "LIVE"
     var delta = Math.abs(next - current);
 
     var days = Math.floor(delta / 86400);
@@ -102,4 +128,5 @@ export default {
     getCandyMachineCollectionInfo,
     getCandyMachineConfigData,
     getTimeDifference,
+    getMintedNfts,
 }

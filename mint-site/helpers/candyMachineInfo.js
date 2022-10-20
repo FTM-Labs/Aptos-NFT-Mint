@@ -1,5 +1,5 @@
-export const candyMachineAddress = "0xbfa1e58b2846eb08cd27a04face5c3b918c0e6382f16619ce4bc8395c6d59024";
-export const collectionName = "Wolf of Aptos"; // Case sensitive!
+export const candyMachineAddress = "0x910d29c9605d6369edd2f895d4b93e1742819a63cf6c4535e3682701265f3149";
+export const collectionName = "Wolf of Aptos test"; // Case sensitive!
 export const collectionCoverUrl = "https://cloudflare-ipfs.com/ipfs/QmPJXqjBKPJq15ZQBqn6ZrcFRb546emUYSnpkXKjCXZPxy";
 export const mode = "dev"; // "dev" or "test" or "mainnet"
 
