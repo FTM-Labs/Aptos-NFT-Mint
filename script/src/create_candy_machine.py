@@ -14,8 +14,12 @@ import time
 
 def create():
     print(f"Mode: {MODE}")
-    print('\n=== Upload assets to IPFS ===')
-    util.uploadFolder()
+
+    print('\n=== Upload assets to storage solution ===')
+    if not util.uploadFolder():
+        print("Not all files were uploaded to storage. Try again.")
+        return
+        
     with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
         config = json.load(f)
     _ASSET_FOLDER = config['collection']['assetDir']
@@ -25,13 +29,15 @@ def create():
     _COLLECTION_COVER = config['collection']['collectionCover']
     _COLLECTION_SIZE = int(config['collection']['collectionSize'])
     _MINT_FEE = int(config['collection']['mintFee'])
+    _ROYALTY_POINTS_DENOMINATOR = config['collection']['royalty_points_denominator']
+    _ROYALTY_POINTS_NUMERATOR = config['collection']['royalty_points_numerator']
     _PUBLIC_MINT_TIME = int(config['collection']['publicMintTime'])
     _PRESALE_MINT_TIME = int(config['collection']['presaleMintTime'])
-    _ACCOUNT_ADDRESS = config['candymachine']['account_address']
-    _ACCOUNT_PRIVATE_KEY = config['candymachine']['account_private_key']
+    _ACCOUNT_ADDRESS = config['candymachine']['cmPublicKey']
+    _ACCOUNT_PRIVATE_KEY = config['candymachine']['cmPrivateKey']
     rest_client = RestClient(NODE_URL)
     
-    print('\nSucces: asset ipfs hash can be found in ' + _ASSET_FOLDER + '/image_cid.txt')
+    # print('\nSucces: asset ipfs hash can be found in ' + _ASSET_FOLDER + '/image_cid.txt')
 
     # TODO: remove fund account for mainnet and prompt for user to fund account themselves.
 
@@ -53,9 +59,13 @@ def create():
     config['candymachine']['cmPublicKey'] = str(alice.address())
     config['candymachine']['cmPrivateKey'] = str(alice.private_key)
     with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
-         json.dump(config, configfile)
+        json.dump(config, configfile, indent=4)
     
-    accountBalance = int (rest_client.account_balance(alice.address().hex()))
+    try:
+        accountBalance = int (rest_client.account_balance(alice.address().hex()))
+    except TypeError:
+        print("Please add some Aptos to your candy machine account")
+        return 
     while (True):
         answer = input("Enter yes if you have some aptos in your account: ") 
         if answer == "yes": 
@@ -100,9 +110,12 @@ def create():
     print("\n Success, public mint time is set to: " + str(datetime.datetime.fromtimestamp(_PUBLIC_MINT_TIME)) + " txn hash: " + txn_hash)
 
     print("\n=== Uploading NFT ===")
-    tmp_file = open(_ASSET_FOLDER + '/image_cid.txt', 'r')
-    lines = tmp_file.readlines()
-    
+    # tmp_file = open(_ASSET_FOLDER + '/image_cid.txt', 'r')
+    # lines = tmp_file.readlines()
+    uri_list_file_path = os.path.join(_ASSET_FOLDER, "image_uris.json")
+    with open(uri_list_file_path, "r") as uri_list_file:
+        uri_list = json.load(uri_list_file)
+
     all_descrips = list()
     all_token_names = list()
     all_uri = list()
@@ -117,14 +130,14 @@ def create():
     propertyTypes = []
 
     nfts = []
-    for line in lines:
+    for uriInfo in uri_list:
         counter += 1
-        line = line.split(' ')
+
         tmp_name = _COLLECTION_NAME + " - #" + str(counter)
-        tmp_uri = "https://cloudflare-ipfs.com/ipfs/" + line[1]
+        tmp_uri = uriInfo["uri"]
         tmp_description = tmp_name
         # read in traits 
-        with open(_METADATA_FOLDER + '/' + line[0] + '.json') as metadata_file:    
+        with open(_METADATA_FOLDER + '/' + uriInfo["name"] + '.json') as metadata_file:    
             data = json.load(metadata_file)
             for trait in data['attributes']:
                 if isinstance(trait['value'], str): 
@@ -154,39 +167,58 @@ def create():
         print(f"batch iter:{i}")
         startIndex = i * batch_num
         endIndex = startIndex + batch_num
-        batch_token_names = all_token_names[startIndex:endIndex]
-        batch_descrips = all_descrips[startIndex:endIndex]
-        batch_uri = all_uri[startIndex:endIndex]
-        batch_property_keys = propertyKeys[startIndex:endIndex]
-        batch_property_values = propertyValues[startIndex:endIndex]
-        batch_property_types = propertyTypes[startIndex:endIndex]
-        txn_hash = rest_client.upload_nft(alice, _COLLECTION_NAME, batch_token_names, batch_descrips, batch_uri, batch_property_keys,batch_property_values,batch_property_types)
-        rest_client.wait_for_transaction(txn_hash)
-        print("\n Success, txn hash: " + txn_hash)
-
-
+        handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes, alice, _COLLECTION_NAME, rest_client)
+        
     if remainder:
         startIndex = num_batch*batch_num
         endIndex = len(all_token_names)
-        batch_token_names = all_token_names[startIndex:endIndex]
-        batch_descrips = all_descrips[startIndex:endIndex]
-        batch_uri = all_uri[startIndex:endIndex]
-        batch_property_keys = propertyKeys[startIndex:endIndex]
-        batch_property_values = propertyValues[startIndex:endIndex]
-        batch_property_types = propertyTypes[startIndex:endIndex]
-        txn_hash = rest_client.upload_nft(alice, _COLLECTION_NAME, batch_token_names, batch_descrips, batch_uri, batch_property_keys,batch_property_values,batch_property_types)
-        rest_client.wait_for_transaction(txn_hash)
-        print("\n Success, txn hash: " + txn_hash)
-    # #Testing mint
-    # print("\n=== Bob going to mint NFT ===")
-    # bob = Account.generate()
-    # print(f"bob address: {bob.address()}")
-    # print(f'Public key: {alice.address()}\n')
-    # print(f'Private key: {alice.private_key}\n')
+        handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes, alice, _COLLECTION_NAME, rest_client)
 
-    # faucet_client.fund_account(bob.address(), 20000000000)
-    # txn_hash = rest_client.mint_tokens(
-    #     user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=10)
 
-    # rest_client.wait_for_transaction(txn_hash)
-    # print("\n Success, txn hash: " + txn_hash)
+def handleNftUpload(
+    startIndex, endIndex,
+    all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes,
+    alice, _COLLECTION_NAME,
+    rest_client
+):
+    batch_token_names = all_token_names[startIndex:endIndex]
+    batch_descrips = all_descrips[startIndex:endIndex]
+    batch_uri = all_uri[startIndex:endIndex]
+    batch_property_keys = propertyKeys[startIndex:endIndex]
+    batch_property_values = propertyValues[startIndex:endIndex]
+    batch_property_types = propertyTypes[startIndex:endIndex]
+    txn_hash = rest_client.upload_nft(alice, _COLLECTION_NAME, batch_token_names, batch_descrips, batch_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, batch_property_keys, batch_property_values, batch_property_types)
+    rest_client.wait_for_transaction(txn_hash)
+    print("\n Success, txn hash: " + txn_hash)
+
+
+# def mint():
+#     with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
+#         config = json.load(f)
+
+#     _COLLECTION_NAME = config['collection']['collectionName']
+#     _ACCOUNT_ADDRESS = config['candymachine']['cmPublicKey']
+#     _ACCOUNT_PRIVATE_KEY = config['candymachine']['cmPrivateKey']
+#     rest_client = RestClient(NODE_URL)
+
+#     accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
+#     privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
+#     alice = Account(accountAddres, privateKey)
+#     #Testing mint
+#     print("\n=== Bob going to mint NFT ===")
+#     bob = Account.generate()
+#     print(f"bob address: {bob.address()}")
+#     print(f"bob private: {bob.private_key}")
+#     print(f'Public key: {alice.address()}\n')
+#     print(f'Private key: {alice.private_key}\n')
+
+#     FaucetClient(FAUCET_URL, rest_client).fund_account(bob.address(), 20000000000)
+#     accountBalance = int (rest_client.account_balance(bob.address().hex()))
+#     print(accountBalance)
+#     txn_hash = rest_client.mint_tokens(
+#         user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=1)
+
+#     rest_client.wait_for_transaction(txn_hash)
+#     print("\n Success, txn hash: " + txn_hash)
+
+# mint()

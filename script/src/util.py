@@ -12,6 +12,10 @@ import requests
 import constants
 import datetime
 
+import io
+from PIL import Image
+from arweave.arweave_lib import Wallet, Transaction
+import logging
 
 with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
     config = json.load(f)
@@ -22,9 +26,11 @@ _PRESALE_MINT_TIME = int(config['collection']['presaleMintTime'])
 _PUBLIC_MINT_TIME = int(config['collection']['publicMintTime'])
 _COLLECTION_NAME = config['collection']['collectionName']
 _WL_DIR = config['collection']['whitelistDir']
-_API_ENDPOINT = config['pinata']['pinataApi']
-_API_KEY = config['pinata']['pinataPublicKey']
-_API_SECRETE_KEY = config['pinata']['pinataSecretKey']
+_STORAGE_SOLUTION = config["storage"]["solution"]
+_ARWEAVE_WALLET_PATH = config["storage"]["arweave"]["keyfilePath"]
+_API_ENDPOINT = config["storage"]['pinata']['pinataApi']
+_API_KEY = config["storage"]['pinata']['pinataPublicKey']
+_API_SECRETE_KEY = config["storage"]['pinata']['pinataSecretKey']
 _ASSET_FOLDER = config['collection']['assetDir']
 _HEADERS = {
     'pinata_api_key': _API_KEY,
@@ -75,6 +81,8 @@ def update_whitelist():
     rest_client.wait_for_transaction(txn_hash)
     print("\n Success, txn hash: " + txn_hash)
 
+
+
 def prepareFormData(fileDir):
     # data to be sent to api
     multipart_form_data = {
@@ -83,7 +91,6 @@ def prepareFormData(fileDir):
     return multipart_form_data
 
 def uploadToIpfs(file):
-
     multipart_form_data = prepareFormData(file)
     # sending post request and saving response as response object
     try:
@@ -91,34 +98,131 @@ def uploadToIpfs(file):
         r.raise_for_status()
         jsonResponse = r.json()
         ipfsHash = jsonResponse['IpfsHash']
-        print("Upload success! View file at: " + "https://cloudflare-ipfs.com/ipfs/" + ipfsHash)
-        return ipfsHash
+        ipfsUri = constants.IPFS_GATEWAY + ipfsHash
+        print("Upload success! View file at: " + ipfsUri)
+        return ipfsUri
     except requests.exceptions.HTTPError as e:
         print (e.response.text)
         return None
 
-def uploadFolder():
-    if os.path.exists(_ASSET_FOLDER + '/' + 'image_cid.txt'):
-        print("assets IPFS hash file already exist")
-        return
-    cid_list = []
+def uploadFolderToIpfs():
+    uri_list_file_path = os.path.join(_ASSET_FOLDER, "image_uris.json")
+    uri_list = getUriList(uri_list_file_path)
+
     os.chdir(_ASSET_FOLDER)
+    failed_file_names = []
     for file in os.listdir():
         if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
             # special case: cover image
-            fileName = file.split('.')[0]
+            file_name = file.split('.')[0]
             file_path = _ASSET_FOLDER + '/' + file
+
+            if isFileAlreadyUploaded(file_name, uri_list): continue
+
             print('uploading file: ' + file_path)
-            ipfsHash = uploadToIpfs(file_path)
-            line = fileName + ' ' + ipfsHash
-            if fileName == 'cover':
-                config['collection']['collectionCover'] = constants.IPFS_GATEWAY + '/' + ipfsHash
+            ipfsUri = uploadToIpfs(file_path)
+            if (ipfsUri == None): 
+                print(f"FAILED UPLOAD of file {file_name}")
+                failed_file_names.append(file_name)
                 continue
-            cid_list.append(line)
-    with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
-        json.dump(config, configfile)
-    with open(r'image_cid.txt', 'w') as fp:
-        for item in cid_list:
-            # write each item on a new line
-            fp.write("%s\n" % item)
-        print('Done')
+
+            uri_info = {
+                "name": file_name,
+                "uri": ipfsUri
+            }
+            uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
+    
+    print(f"Files that failed to upload: {failed_file_names}")
+    return len(failed_file_names) == 0 # whether all files were uploaded or not
+
+
+
+def uploadToArweave(file_path, format: str):
+    try:
+        wallet = Wallet(_ARWEAVE_WALLET_PATH)
+
+        img = Image.open(file_path)
+        with io.BytesIO() as output:
+            img.save(output, format=format.upper())
+            imageData = output.getvalue()
+
+            tx = Transaction(wallet, data=imageData)
+            tx.add_tag('Content-Type', f'image/{format}')
+            tx.sign()
+            tx.send()
+
+            uri = f"https://arweave.net/{tx.id}?ext={format}"
+            return uri
+    except:
+        return None
+
+def silenceArweaveTransactions():
+    logger = logging.getLogger("arweave_lib")
+    # only log really bad events
+    logger.setLevel(logging.ERROR)
+
+def getUriList(uri_list_file_path):
+    uri_list = []
+
+    if os.path.exists(_ASSET_FOLDER + '/' + 'image_uris.json'):
+        print("Continuing previous storage upload...")
+        with open(uri_list_file_path, "r") as uri_list_file:
+            uri_list = json.load(uri_list_file)
+    return uri_list
+
+def isFileAlreadyUploaded(fileName, uri_list):
+    for uploaded_file in uri_list:
+        if uploaded_file["name"] == fileName: return True
+    if fileName == 'cover' and len(config['collection']['collectionCover']) != 0: return True
+    return False
+
+def saveUploadInfo(uri_info, uri_list, uri_list_file_path):
+    print(uri_info)
+    if uri_info["name"] == 'cover':
+        config['collection']['collectionCover'] = uri_info["uri"]
+        with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
+            json.dump(config, configfile, indent=4)
+        return uri_list
+
+    uri_list.append(uri_info)
+    with open(uri_list_file_path, "w") as uri_list_file:
+        json.dump(uri_list, uri_list_file, indent=4)
+    return uri_list
+
+def uploadFolderToArweave():
+    silenceArweaveTransactions()
+
+    uri_list_file_path = os.path.join(_ASSET_FOLDER, "image_uris.json")
+    uri_list = getUriList(uri_list_file_path)
+
+    os.chdir(_ASSET_FOLDER)
+    failed_file_names = []
+    for file in os.listdir():
+        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+            file_name, format = file.split('.')
+            file_path = _ASSET_FOLDER + '/' + file
+
+            if isFileAlreadyUploaded(file_name, uri_list): continue
+
+            print('uploading file: ' + file_path + " of format: " + format)
+            arweaveURI = uploadToArweave(file_path, format)
+            if (arweaveURI == None): 
+                print(f"FAILED UPLOAD of file {file_name}")
+                failed_file_names.append(file_name)
+                continue
+
+            uri_info = {
+                "name": file_name,
+                "uri": arweaveURI
+            }
+
+            uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
+            
+    
+    print(f"Files that failed to upload: {failed_file_names}")
+    return len(failed_file_names) == 0 # whether all files were uploaded or not
+
+def uploadFolder():
+    if _STORAGE_SOLUTION == "pinata": return uploadFolderToIpfs()
+    elif _STORAGE_SOLUTION == "arweave": return uploadFolderToArweave()
+    else: raise Exception("Storage solution is not supported. Please select either pinata or arweave")
