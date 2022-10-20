@@ -102,8 +102,8 @@ class RestClient(client.RestClient):
         self, 
         account: Account, 
         name: str, 
-        wl: list[AccountAddress], 
-        sl: list[int]
+        wl: list([AccountAddress]), 
+        sl: list([int])
     ) -> str:
         "Add wl into the whitelist with the supply up to sl."
         transaction_arguments = [
