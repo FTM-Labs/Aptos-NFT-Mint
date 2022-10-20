@@ -155,7 +155,7 @@ You need to have npm installed, we are using nextJS to build this simple website
 open mint-site folder, run
 
 ```bash
-npm install next react react-dom
+npm install
 ```
 
 then run
