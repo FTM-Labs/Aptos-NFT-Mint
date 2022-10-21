@@ -11,15 +11,15 @@
         }
     },
     "candymachine": {
-        "cmPublicKey": "0x30957ce23fa2e31cb10766e27e950cf8aa2245e3273f2e18b2ef84ad4870cd9e",
-        "cmPrivateKey": "0xa7a92445f1279e811eae9f2c7ec43f834d93115c40c30a38ce384e27ec6eb856"
+        "cmPublicKey": "",
+        "cmPrivateKey": ""
     },
     "collection": {
         "assetDir": "/Users/Shared/assets/images",
         "metadataDir": "/Users/Shared/assets/metadata",
         "collectionName": "TestCollection101",
         "collectionDescription": "placeholder",
-        "collectionCover": "https://cloudflare-ipfs.com/ipfs//QmVsudH4sHELLHfaw3mYsX55zMXa2vpPAEvPsdPAV9Kwfx",
+        "collectionCover": "",
         "collectionSize": 10,
         "maxMintPerWallet": 3,
         "mintFee": 10,

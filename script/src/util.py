@@ -128,7 +128,8 @@ def uploadFolderToIpfs():
 
             uri_info = {
                 "name": file_name,
-                "uri": ipfsUri
+                "uri": ipfsUri,
+                "onChain": False
             }
             uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
     
@@ -213,7 +214,8 @@ def uploadFolderToArweave():
 
             uri_info = {
                 "name": file_name,
-                "uri": arweaveURI
+                "uri": arweaveURI,
+                "onChain": False
             }
 
             uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
