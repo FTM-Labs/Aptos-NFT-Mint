@@ -38,6 +38,8 @@ The metadata format we need is super simple. (the metadata format you generated 
 
 ```json
 {
+  "name": "NFT NAME",
+  "description": "NFT description",
   "attributes": [
     { "trait_type": "Background", "value": "Black" },
     { "trait_type": "Eyeball", "value": "Red" },
@@ -96,12 +98,11 @@ Open config.json under src folder (using VS code or other IDE).
 ```
     "candymachine": {
         "cmPublicKey": "",
-        "cmPrivateKey": "",
-        "account_address": "",
-        "account_private_key": ""
+        "cmPrivateKey": ""
     },
 ```
-leave `cmPublicKey` and `cmPrivateKey` blank. You need to have an account with some funds in it and put the account address and private key. This is used to create you candy machine, so make sure you have some funds to cover the gas.
+On devnet or testnet, leave `cmPublicKey` and `cmPrivateKey` blank as they will be generated and funded automatically.
+On mainnet, you first have to create an account and send funds to it (used to create you candy machine, so make sure you have some funds to cover the gas.). You then have to export the account address and private key and input them in config.json.
 #### Pinata API key
 We will be using [Pinata](https://www.pinata.cloud/?gclid=CjwKCAjwu5yYBhAjEiwAKXk_eKjm7QEJ2EiRMrXVFVECHFCmRmuHj3btPYzJCxhBLU7XdN0np5vTdBoC6n0QAvD_BwE) to batch upload your images and metadata to ipfs. Pinata is the most used service for upload NFT images and metadata to ipfs.
 
