@@ -23,12 +23,14 @@
 }
 
 .button {
-  border: 2px solid white;
   background-color: #33ddaa;
   color: white;
-  padding: 14px 28px;
+  border: none;
+  border-radius: .3rem;
+  padding: .5rem 1rem;
   font-size: 18px;
   cursor: pointer;
+  transition: all .4s;
 }
 
 .button:hover {
@@ -36,7 +38,8 @@
 }
 
 .button:disabled {
-  background: #a7a6a6;
+  background: #333333;
+  cursor: not-allowed;
 }
 
 .title a:hover,
@@ -100,6 +103,14 @@
 } */
 
 
+.defaultInput {
+  height: fit-content;
+  color: white;
+  background: #333333;
+  border: none;
+  font-size: 1.5rem;
+  padding-left: .5rem;
+}
 
 
 
@@ -108,6 +119,7 @@
   color: white;
   background: #33ddaa;
   border: none;
+  border-radius: .5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -174,3 +186,15 @@
   width: 35px;
   height: 35px;
 } */
+
+
+
+.mintedNftCard {
+  position: relative;
+  width: 200px;
+  height: auto;
+  background: #111111;
+
+  /* z-index: 100; */
+  transition: all .4s;
+}
