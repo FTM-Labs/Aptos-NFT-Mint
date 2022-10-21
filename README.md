@@ -88,7 +88,7 @@ Open config.json under src folder (using VS code or other IDE).
         "collectionDescription": "eg: Follow us on twitter https://twitter.com/FTMTeam1",
         "collectionCover": "this is will be updated autmatically",
         "collectionSize": "e.g:10000",
-        "mintFee": "mint fee by Aptos Coin, e.g inpit 1 for 1 Aptos mint fee",
+        "mintFee": "mint fee by Aptos Coin, e.g input 1 for 1 Aptos mint fee",
         "presaleMintTime": "Unix timestamp, go to https://www.unixtimestamp.com/, covert your desired time to unix time, eg: 1661257636",
         "publicMintTime": "Unix timestamp, go to https://www.unixtimestamp.com/, covert your desired time to unix time, eg: 1661257636",
         "whitelistDir": "the folder path that contains whitelist.txt."
