@@ -241,7 +241,7 @@ def uploadNftsToCm(
 
     nfts = []
     for index, uriInfo in enumerate(uri_list):
-        if uriInfo["onChain"]: continue
+        if "onChain" in uriInfo.keys() and uriInfo["onChain"]: continue
 
         # tmp_name = _COLLECTION_NAME + " - #" + str(counter)
         tmp_uri = uriInfo["uri"]
@@ -296,6 +296,9 @@ def uploadNftsToCm(
 
     with open(uri_list_file_path, "w") as uri_list_file:
         json.dump(uri_list, uri_list_file, indent=4)
+
+    if len(successfulUploadIndexes) != len(nfts):
+        print(f"Not all nfts ({len(successfulUploadIndexes)} out of {len(nfts)}) were uploaded successfully to the candy machine. Try to \"Retry failed uploads\".")
             
 
 
