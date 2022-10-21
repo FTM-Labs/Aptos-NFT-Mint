@@ -62,7 +62,7 @@ export default function Home() {
       }
     }
     handleMintTxResult(txInfo)
-    if (txInfo.success) setCandyMachineData({...candyMachineData, data: {...candyMachineData.data, numMintedTokens: candyMachineData.data.numMintedTokens + mintInfo.numToMint}})
+    if (txInfo.success) setCandyMachineData({...candyMachineData, data: {...candyMachineData.data, numMintedTokens: (parseInt(candyMachineData.data.numMintedTokens) + parseInt(mintInfo.numToMint)).toString()}})
   }
 
   async function handleMintTxResult(txInfo) {
@@ -131,7 +131,7 @@ export default function Home() {
   }, [candyMachineData])
 
   useEffect(() => {
-    setCanMint(wallet.connected && candyMachineData.data.isPublic && candyMachineData.data.numUploadedTokens > candyMachineData.data.numMintedTokens && timeLeftToMint.presale === "LIVE")
+    setCanMint(wallet.connected && candyMachineData.data.isPublic && parseInt(candyMachineData.data.numUploadedTokens) > parseInt(candyMachineData.data.numMintedTokens) && timeLeftToMint.presale === "LIVE")
   }, [wallet, candyMachineData, timeLeftToMint])
 
   return (
