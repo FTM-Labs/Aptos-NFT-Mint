@@ -134,6 +134,7 @@ def uploadFolderToIpfs():
             uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
     
     print(f"Files that failed to upload: {failed_file_names}")
+    if len(failed_file_names) == 0: print("All images were uploaded successfully")
     return len(failed_file_names) == 0 # whether all files were uploaded or not
 
 
@@ -222,6 +223,7 @@ def uploadFolderToArweave():
             
     
     print(f"Files that failed to upload: {failed_file_names}")
+    if len(failed_file_names) == 0: print("All images were uploaded successfully")
     return len(failed_file_names) == 0 # whether all files were uploaded or not
 
 def uploadFolder():
