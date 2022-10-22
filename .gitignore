@@ -234,3 +234,9 @@ dist
 
 # config 
 script/src/config.json
+
+# assets
+assets
+
+# macOS
+.DS_store
