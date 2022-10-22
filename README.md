@@ -193,6 +193,13 @@ Choose `Create candy machine`.
 
 ***On devnet or testnet, we automatically deposited some aptos to the candy machine account.***
 
+If you need more aptos in devnet, check how to use `faucet_client` to fund account in `prepareCandyMachineAccount` in `create_candy_machine.py`. As an example, you can write a for loop: 
+```
+for i in range(15):
+    faucet_client.fund_account(alice.address(), 100000000)
+```
+
+If you want to change the maximum gas amount allowed, you can increase `MAX_GAS` in `constants.py`.
 
 ### Additional functions
 We provide options to update presale mint time, public mint time, mint fee and whitelist. Simply modify the values in `config.json` and run the correspoinding command to update.
