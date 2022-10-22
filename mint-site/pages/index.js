@@ -40,7 +40,7 @@ export default function Home() {
     // Generate a transaction
     const payload = {
       type: "entry_function_payload",
-      function: "0xdcd69bc972f11bfbc3de6a8b656b66a227fe4d38c8880c781e8bf8785195e1a9::candy_machine_v2::mint_tokens",
+      function: "0xc071ef709539f7f9372f16050bf984fe6f11850594b8394f11bc74d22f48836b::candy_machine_v2::mint_tokens",
       type_arguments: [],
       arguments: [
       	candyMachineAddress,

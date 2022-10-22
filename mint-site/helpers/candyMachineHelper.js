@@ -7,7 +7,7 @@ async function getCandyMachineResourceAccount() {
     const resources = response.data;
 
     for (const resource of resources) {
-        if (resource.type === "0xdcd69bc972f11bfbc3de6a8b656b66a227fe4d38c8880c781e8bf8785195e1a9::candy_machine_v2::ResourceData") {
+        if (resource.type === "0xc071ef709539f7f9372f16050bf984fe6f11850594b8394f11bc74d22f48836b::candy_machine_v2::ResourceData") {
             return resource.data.resource_account.account;
         }
     }
@@ -30,7 +30,7 @@ async function getCandyMachineCollectionInfo(
             collectionInfo.tokenDataHandle = resource.data.token_data.handle;
             continue;
         }
-        if (resource.type === "0xdcd69bc972f11bfbc3de6a8b656b66a227fe4d38c8880c781e8bf8785195e1a9::candy_machine_v2::CollectionConfigs") {
+        if (resource.type === "0xc071ef709539f7f9372f16050bf984fe6f11850594b8394f11bc74d22f48836b::candy_machine_v2::CollectionConfigs") {
             collectionInfo.candyMachineConfigHandle = resource.data.collection_configs.handle;
         }
     }
@@ -43,7 +43,7 @@ async function getCandyMachineConfigData(
 ) {
     const data = JSON.stringify({
         "key_type": "vector<u8>",
-        "value_type": "0xdcd69bc972f11bfbc3de6a8b656b66a227fe4d38c8880c781e8bf8785195e1a9::candy_machine_v2::CollectionConfig",
+        "value_type": "0xc071ef709539f7f9372f16050bf984fe6f11850594b8394f11bc74d22f48836b::candy_machine_v2::CollectionConfig",
         "key": stringToHex(collectionName)
     });
     const customConfig = {
@@ -57,7 +57,7 @@ async function getCandyMachineConfigData(
 
     const isPublic = cmConfigData.is_public;
     const maxMintsPerWallet = cmConfigData.max_supply_per_user;
-    const mintFee = cmConfigData.mint_fee_per_mille / 1000000;
+    const mintFee = cmConfigData.mint_fee_per_mille / 100000000;
     const presaleMintTime = cmConfigData.presale_mint_time;
     const publicMintTime = cmConfigData.public_mint_time;
 
