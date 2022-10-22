@@ -35,7 +35,7 @@ Its simple and flexble.
 Basically, you need layered art and use hashlips the generate images and metadata.
 
 The metadata format we need is super simple. (the metadata format you generated from hashlips will work, we will just ignore the other attributes)
-
+However, make sure each metadata file has a different, unique name.
 ```json
 {
   "name": "NFT NAME",
@@ -88,7 +88,7 @@ Open config.json under src folder (using VS code or other IDE).
         "collectionDescription": "eg: Follow us on twitter https://twitter.com/FTMTeam1",
         "collectionCover": "this is will be updated autmatically",
         "collectionSize": "e.g:10000",
-        "mintFee": "mint fee by Aptos Coin, e.g input 1 for 1 Aptos mint fee",
+        "mintFee": "mint fee by Aptos Coin, e.g input 100000000 for 1 Aptos mint fee",
         "presaleMintTime": "Unix timestamp, go to https://www.unixtimestamp.com/, covert your desired time to unix time, eg: 1661257636",
         "publicMintTime": "Unix timestamp, go to https://www.unixtimestamp.com/, covert your desired time to unix time, eg: 1661257636",
         "whitelistDir": "the folder path that contains whitelist.txt."

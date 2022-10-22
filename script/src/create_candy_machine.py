@@ -17,7 +17,7 @@ def verifyMetadataFiles(_ASSET_FOLDER, _METADATA_FOLDER, _COLLECTION_SIZE):
 
     assets = os.listdir(_ASSET_FOLDER)
     images = [asset.split(".")[0] for asset in assets if asset.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'))]
-    metadatas = os.listdir(_METADATA_FOLDER)
+    metadatas = [metadata for metadata in os.listdir(_METADATA_FOLDER) if metadata.endswith(".json")]
     if len(images) - 1 != _COLLECTION_SIZE or len(metadatas) != _COLLECTION_SIZE:
         print("Metadata files error: Not the same amount of images and/or metadata files as the collectionSize in config.json.")
         is_valid = False
@@ -317,8 +317,9 @@ def handleNftUpload(
     try:
         txn_hash = rest_client.upload_nft(alice, _COLLECTION_NAME, batch_token_names, batch_descrips, batch_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, batch_property_keys, batch_property_values, batch_property_types)
         rest_client.wait_for_transaction(txn_hash)
-    except:
+    except Exception as e:
         print(f"An error occured while uploading batch from {startIndex} to {endIndex}")
+        print(e)
         return False
     print("\n Success, txn hash: " + txn_hash)
     return True
