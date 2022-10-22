@@ -112,8 +112,8 @@ def create():
     _ACCOUNT_PRIVATE_KEY = config['candymachine']['cmPrivateKey']
     rest_client = RestClient(NODE_URL)
 
-    print("\n=== Verifying assets and metadata ===")
-    if not verifyMetadataFiles(_ASSET_FOLDER, _METADATA_FOLDER, _COLLECTION_SIZE): return
+    #print("\n=== Verifying assets and metadata ===")
+    #if not verifyMetadataFiles(_ASSET_FOLDER, _METADATA_FOLDER, _COLLECTION_SIZE): return
 
     print('\n=== Upload assets to storage solution ===')
     if not util.uploadFolder():
