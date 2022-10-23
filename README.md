@@ -227,3 +227,8 @@ then run
 ```bash
 npm run dev
 ```
+
+
+# Troubleshooting
+
+1. `ERESOURCE_ACCOUNT_EXISTS`: Currently one wallet can hold one resource account, this normally happen when creating candy machine on mainnet and for some reason (user interrupt or other errors) the process didint complete. If you collection has been successfully created, try `Retry failed uploads` from the cli menu. Otherwise, move your funds to a new wallet and paste in the account address and private key in `config.json` and try create candy machine again.
