@@ -1,5 +1,5 @@
 import axios from "axios";
-import {candyMachineAddress, collectionName, mode, NODE_URL} from "./candyMachineInfo"
+import {candyMachineAddress, collectionName, mode, NODE_URL, CONTRACT_ADDRESS} from "./candyMachineInfo"
 
 
 async function getCandyMachineResourceAccount() {
@@ -7,7 +7,7 @@ async function getCandyMachineResourceAccount() {
     const resources = response.data;
 
     for (const resource of resources) {
-        if (resource.type === "0xc071ef709539f7f9372f16050bf984fe6f11850594b8394f11bc74d22f48836b::candy_machine_v2::ResourceData") {
+        if (resource.type === `${CONTRACT_ADDRESS}::candy_machine_v2::ResourceData`) {
             return resource.data.resource_account.account;
         }
     }
@@ -30,7 +30,7 @@ async function getCandyMachineCollectionInfo(
             collectionInfo.tokenDataHandle = resource.data.token_data.handle;
             continue;
         }
-        if (resource.type === "0xc071ef709539f7f9372f16050bf984fe6f11850594b8394f11bc74d22f48836b::candy_machine_v2::CollectionConfigs") {
+        if (resource.type === `${CONTRACT_ADDRESS}::candy_machine_v2::CollectionConfigs`) {
             collectionInfo.candyMachineConfigHandle = resource.data.collection_configs.handle;
         }
     }
@@ -43,7 +43,7 @@ async function getCandyMachineConfigData(
 ) {
     const data = JSON.stringify({
         "key_type": "vector<u8>",
-        "value_type": "0xc071ef709539f7f9372f16050bf984fe6f11850594b8394f11bc74d22f48836b::candy_machine_v2::CollectionConfig",
+        "value_type": `${CONTRACT_ADDRESS}::candy_machine_v2::CollectionConfig`,
         "key": stringToHex(collectionName)
     });
     const customConfig = {

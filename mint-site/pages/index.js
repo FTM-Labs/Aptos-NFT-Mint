@@ -6,7 +6,7 @@ import { AptosClient } from "aptos";
 import { useWallet } from '@manahippo/aptos-wallet-adapter';
 import cmHelper from "../helpers/candyMachineHelper"
 import ConnectWalletButton from '../helpers/Aptos/ConnectWalletButton';
-import {candyMachineAddress, collectionName, collectionCoverUrl, NODE_URL} from "../helpers/candyMachineInfo"
+import {candyMachineAddress, collectionName, collectionCoverUrl, NODE_URL, CONTRACT_ADDRESS} from "../helpers/candyMachineInfo"
 
 import Spinner from "react-bootstrap/Spinner"
 import Modal from "react-bootstrap/Modal"
@@ -40,7 +40,7 @@ export default function Home() {
     // Generate a transaction
     const payload = {
       type: "entry_function_payload",
-      function: "0xc071ef709539f7f9372f16050bf984fe6f11850594b8394f11bc74d22f48836b::candy_machine_v2::mint_tokens",
+      function: `${CONTRACT_ADDRESS}::candy_machine_v2::mint_tokens`,
       type_arguments: [],
       arguments: [
       	candyMachineAddress,
@@ -129,8 +129,11 @@ export default function Home() {
     console.log(candyMachineData.data)
   }, [candyMachineData])
 
+  // useEffect(() => {
+  //   setCanMint(wallet.connected && candyMachineData.data.isPublic && parseInt(candyMachineData.data.numUploadedTokens) > parseInt(candyMachineData.data.numMintedTokens) && timeLeftToMint.presale === "LIVE")
+  // }, [wallet, candyMachineData, timeLeftToMint])
   useEffect(() => {
-    setCanMint(wallet.connected && candyMachineData.data.isPublic && parseInt(candyMachineData.data.numUploadedTokens) > parseInt(candyMachineData.data.numMintedTokens) && timeLeftToMint.presale === "LIVE")
+    setCanMint(true)
   }, [wallet, candyMachineData, timeLeftToMint])
 
   return (
