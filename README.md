@@ -29,6 +29,7 @@ In order to use this tool, here are the few things you need to have before conti
 git clone https://github.com/FTM-Labs/AptosNFTMint.git
 ```
 ### Python3
+You need python version 3.9 and above.
 https://www.python.org/downloads/ 
 ### Install dependencies
 You need python version 3.9 and above
