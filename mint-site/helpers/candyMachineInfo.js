@@ -3,6 +3,7 @@ export const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME;
 export const collectionCoverUrl = process.env.NEXT_PUBLIC_COLLECTION_IMAGE_URI;
 export const mode = process.env.NEXT_PUBLIC_APTOS_NETWORK;
 
+
 export let NODE_URL;
 let FAUCET_URL;
 
