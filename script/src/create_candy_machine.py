@@ -284,18 +284,19 @@ def uploadNftsToCm(
         endIndex = startIndex + batch_num
         success = handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes, alice, _COLLECTION_NAME, rest_client)
         if success: successfulUploadIndexes.extend(range(startIndex, endIndex))
-
+        for successfulUploadIndex in successfulUploadIndexes:
+            uri_list[nfts[successfulUploadIndex]["uriInfoIndex"]]["onChain"] = True
+        with open(uri_list_file_path, "w") as uri_list_file:
+            json.dump(uri_list, uri_list_file, indent=4)
     if remainder:
         startIndex = num_batch*batch_num
         endIndex = len(all_token_names)
         success = handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes, alice, _COLLECTION_NAME, rest_client)
         if success: successfulUploadIndexes.extend(range(startIndex, endIndex))
-
-    for successfulUploadIndex in successfulUploadIndexes:
-        uri_list[nfts[successfulUploadIndex]["uriInfoIndex"]]["onChain"] = True
-
-    with open(uri_list_file_path, "w") as uri_list_file:
-        json.dump(uri_list, uri_list_file, indent=4)
+        for successfulUploadIndex in successfulUploadIndexes:
+            uri_list[nfts[successfulUploadIndex]["uriInfoIndex"]]["onChain"] = True
+        with open(uri_list_file_path, "w") as uri_list_file:
+            json.dump(uri_list, uri_list_file, indent=4)
 
     if len(successfulUploadIndexes) != len(nfts):
         print(f"Not all nfts ({len(successfulUploadIndexes)} out of {len(nfts)}) were uploaded successfully to the candy machine. Try to \"Retry failed uploads\".")
