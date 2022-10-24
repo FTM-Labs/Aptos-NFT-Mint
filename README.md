@@ -210,12 +210,15 @@ We provide options to update presale mint time, public mint time, mint fee and w
 ### Create website
 You need to have npm installed, we are using nextJS to build this simple website
 
-change the values in `mint-site/helpers/candyMachineInfo.js` - can find those info in your config.json:
+change the name `.env-example` to `.env` - can find those info in your config.json:
 
 ```txt
-export const candyMachineAddress = "YOUR CM ADDRESS";
-export const collectionName = "collection name(Case sensitive!)";
-export const collectionCoverUrl = " THE COVER LINK eg: https://cloudflare-ipfs.com/ipfs/asjdhasjhd"; 
+NEXT_PUBLIC_CANDY_MACHINE_ID="YOUR CM ADDRESS"
+NEXT_PUBLIC_COLLECTION_NAME="collection name(Case sensitive!)"
+NEXT_PUBLIC_COLLECTION_IMAGE_URI="THE COVER LINK eg: https://cloudflare-ipfs.com/ipfs/asjdhasjhd"
+
+# dev | test | mainnet
+NEXT_PUBLIC_APTOS_NETWORK=dev
 ```
 
 open mint-site folder, run
