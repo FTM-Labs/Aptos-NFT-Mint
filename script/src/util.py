@@ -113,7 +113,6 @@ def uploadFolderToIpfs():
     failed_file_names = []
     for file in os.listdir():
         if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
-            # special case: cover image
             file_name = file.split('.')[0]
             file_path = _ASSET_FOLDER + '/' + file
 
@@ -135,6 +134,11 @@ def uploadFolderToIpfs():
     
     print(f"Files that failed to upload: {failed_file_names}")
     if len(failed_file_names) == 0: print("All images were uploaded successfully")
+    # set cover image if cover.png is not supplied
+    if not config['collection']['collectionCover']: 
+        config['collection']['collectionCover'] = uri_list[0]["uri"]
+        with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
+            json.dump(config, configfile, indent=4)
     return len(failed_file_names) == 0 # whether all files were uploaded or not
 
 
