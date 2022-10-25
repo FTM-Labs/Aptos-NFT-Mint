@@ -3,16 +3,16 @@
         "solution": "pinata",
         "pinata": {
             "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
-            "pinataPublicKey": "7a48a0e29df9d872f129",
-            "pinataSecretKey": "2ae26d4288e7cb9ceef391b514ab0e3bcce863227a8c5181869db5350428b511"
+            "pinataPublicKey": "4b667c45c40242b041da",
+            "pinataSecretKey": "aceba97fe40b499a253b1dc1d61d2cab6d1a44e74d977ac87f7614fa3a1c837b"
         },
         "arweave": {
             "keyfilePath": "/Users/Shared/arweave-keyfile.json"
         }
     },
     "candymachine": {
-        "cmPublicKey": "",
-        "cmPrivateKey": ""
+        "cmPublicKey": "0x3b3a0901cfc91b289cd16b62b28fd850e52a2921d463945a3722c33a81bad453",
+        "cmPrivateKey": "0x80fd0f609fe180f44db7c3dde7704daf53a621e602a86bf461ac2cfe0b28370a"
     },
     "collection": {
         "assetDir": "/Users/Shared/assets/images",
