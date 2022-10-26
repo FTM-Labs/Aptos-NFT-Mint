@@ -1,5 +1,5 @@
 from asyncio import constants
-from constants import NODE_URL, FAUCET_URL, MODE
+from constants import NODE_URL, FAUCET_URL, MODE, BATCH_NUMBER
 from aptos_sdk.account import Account, AccountAddress, ed25519
 from client import RestClient
 from aptos_sdk.client import FaucetClient
@@ -142,7 +142,8 @@ def prepareCandyMachineAccount(_ACCOUNT_ADDRESS, _ACCOUNT_PRIVATE_KEY, rest_clie
             if index == 1: raise Exception
         alice = Account.generate()
         faucet_client = FaucetClient(FAUCET_URL, rest_client)
-        faucet_client.fund_account(alice.address(), 200000000)
+        for i in range(3):
+            faucet_client.fund_account(alice.address(), 100000000)
     else:
         accountAddress = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
         privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
@@ -274,7 +275,7 @@ def uploadNftsToCm(
 
     print(f"Uploading {len(nfts)} NFTs out of {len(uri_list)} ({len(uri_list) - len(nfts)} already uploaded).")
     # batch upload x nft at a time
-    batch_num = 15
+    batch_num = BATCH_NUMBER
     num_batch = len(all_token_names) // batch_num
     remainder = len(all_token_names) % batch_num
     successfulUploadIndexes = []
