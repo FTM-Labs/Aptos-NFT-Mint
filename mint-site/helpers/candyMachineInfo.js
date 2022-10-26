@@ -1,7 +1,7 @@
-export const candyMachineAddress = "0xd681db00fffa1584c7c6c251ea903b65546e2dd11da571c9029fef06fa433800";
+export const candyMachineAddress = "0x3ca7cf9725834e3035222452e3a21bdb0c3af228c07925f62daaf90871c41188";
 export const collectionName = "TestCollection101"; // Case sensitive!
 export const collectionCoverUrl = "https://cloudflare-ipfs.com/ipfs/QmV9Qkoux7Xkrm2FjZmhkrDHnWAPV4LnZ8ZjQPBzLxtduf";
-export const mode = "dev"; // "dev" or "test" or "mainnet"
+export const mode = "main"; // "dev" or "test" or "mainnet"
 
 export let NODE_URL;
 export const CONTRACT_ADDRESS = "0x4b8cec33043700c2e159b55d39dff908c28f21ebaf0d64b0539a465721021a3a";
