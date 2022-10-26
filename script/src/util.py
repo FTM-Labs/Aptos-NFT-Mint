@@ -2,7 +2,7 @@
 from client import RestClient
 import os
 import sys
-from constants import NODE_URL
+from constants import NODE_URL, BATCH_NUMBER
 from aptos_sdk.account_address import AccountAddress
 from aptos_sdk.account import Account
 from aptos_sdk import ed25519
@@ -75,13 +75,26 @@ def update_whitelist():
         print("address: " + address + ' with supply: ' + wl_supply)
         addresses.append(AccountAddress.from_hex(address))
         wl_supplies.append(int(wl_supply))
-    txn_hash = rest_client.update_whitelist(
-        cmAccount, _COLLECTION_NAME, addresses, wl_supplies
-    )
-    rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, txn hash: " + txn_hash)
-
-
+    batch_num = BATCH_NUMBER
+    num_batch = len(addresses) // batch_num
+    remainder = len(addresses) % batch_num
+    for i in range(num_batch):
+        print(f"batch iter:{i}")
+        startIndex = i * batch_num
+        endIndex = startIndex + batch_num
+        txn_hash = rest_client.update_whitelist(
+            cmAccount, _COLLECTION_NAME, addresses[startIndex:endIndex], wl_supplies[startIndex:endIndex]
+        )
+        rest_client.wait_for_transaction(txn_hash)
+        print("\n Success, txn hash: " + txn_hash)
+    if remainder:
+        startIndex = num_batch*batch_num
+        endIndex = len(addresses)
+        txn_hash = rest_client.update_whitelist(
+            cmAccount, _COLLECTION_NAME, addresses[startIndex:endIndex], wl_supplies[startIndex:endIndex]
+        )
+        rest_client.wait_for_transaction(txn_hash)
+        print("\n Success, txn hash: " + txn_hash)
 
 def prepareFormData(fileDir):
     # data to be sent to api

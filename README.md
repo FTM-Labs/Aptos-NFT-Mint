@@ -216,6 +216,7 @@ change the values in `mint-site/helpers/candyMachineInfo.js` - can find those in
 export const candyMachineAddress = "YOUR CM ADDRESS";
 export const collectionName = "collection name(Case sensitive!)";
 export const collectionCoverUrl = " THE COVER LINK eg: https://cloudflare-ipfs.com/ipfs/asjdhasjhd"; 
+export const COLLECTION_SIZE = 10
 ```
 
 open mint-site folder, run
