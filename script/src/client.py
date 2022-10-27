@@ -77,7 +77,7 @@ class RestClient(client.RestClient):
             TransactionArgument(uri, Serializer.str),
             TransactionArgument(U64_MAX, Serializer.u64),
             TransactionArgument(
-                [False, False, False], Serializer.sequence_serializer(Serializer.bool)),
+                [True, True, True], Serializer.sequence_serializer(Serializer.bool)),
             TransactionArgument(True, Serializer.bool),
             TransactionArgument(max_supply_per_user, Serializer.u64),
             TransactionArgument(mint_fee_per_mille, Serializer.u64),
