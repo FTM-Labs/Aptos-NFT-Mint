@@ -200,6 +200,7 @@ class CandyMachine:
         for index, uriInfo in enumerate(uri_list):
             if "onChain" in uriInfo.keys() and uriInfo["onChain"]: continue
             tmp_uri = uriInfo["uri"]
+            tmp_metadata_uri = uriInfo["metadata_uri"]
             metadataFilePath = self.metadata_folder + '/' + uriInfo["name"] + '.json'
             with open(metadataFilePath) as metadata_file:
                 data = json.load(metadata_file)
@@ -211,14 +212,14 @@ class CandyMachine:
                         propertyValue.append(trait['value'].encode())
                         propertyType.append('String')
             nfts.append(
-                {"nft": NFT(tmp_name, tmp_uri, tmp_description, propertyKey, propertyValue, propertyType), "uriInfoIndex": index}
+                {"nft": NFT(tmp_name, tmp_uri, tmp_metadata_uri, tmp_description, propertyKey, propertyValue, propertyType), "uriInfoIndex": index}
             )
             propertyKey, propertyValue, propertyType = [], [], []
         random.shuffle(nfts)
         for nftInfo in nfts:
             all_token_names.append(nftInfo["nft"].name)
             all_descrips.append(nftInfo["nft"].description)
-            all_uri.append(nftInfo["nft"].uri)
+            all_uri.append(nftInfo["nft"].metadataUri)
             propertyKeys.append(nftInfo["nft"].propertyKey)
             propertyValues.append(nftInfo["nft"].propertyValue)
             propertyTypes.append(nftInfo["nft"].propertyType)

@@ -172,10 +172,12 @@ def uploadFolderToIpfs():
             data['image'] = ipfsUri
             with open(metadataFilePath, 'w') as metadata_file:
                 json.dump(data, metadata_file, indent=4)
+            metadataUri = uploadToIpfs(metadataFilePath)
             uri_info = {
                 "name": file_name,
                 "token_name": token_name,
                 "uri": ipfsUri,
+                "metadata_uri": metadataUri,
                 "onChain": False
             }
             uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
