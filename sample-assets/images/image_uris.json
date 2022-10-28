@@ -2,26 +2,26 @@
     {
         "name": "4",
         "uri": "https://cloudflare-ipfs.com/ipfs/QmdW6AiqXkx2Tye1p2oFz2wWfUoweBcEJsDQH1T7gK99RW",
-        "onChain": false
+        "onChain": true
     },
     {
         "name": "2",
         "uri": "https://cloudflare-ipfs.com/ipfs/QmNNPQUVYPLwJKCRUMoJKdeob2wLHXdcenRVKRid7UbCsr",
-        "onChain": false
+        "onChain": true
     },
     {
         "name": "3",
         "uri": "https://cloudflare-ipfs.com/ipfs/QmWx696forVE62xdetz3KCbHu6UCNH8dqynQNrF4secWje",
-        "onChain": false
+        "onChain": true
     },
     {
         "name": "1",
         "uri": "https://cloudflare-ipfs.com/ipfs/QmS8ADTXjXTpXmyGc7GxAWew8b8iKdyKu5E3yhpFUQGuJw",
-        "onChain": false
+        "onChain": true
     },
     {
         "name": "5",
         "uri": "https://cloudflare-ipfs.com/ipfs/QmRuPvs4j9e8Q4R5iSpkrtEQbhX5pPBJs4w8BvkB5L6qqp",
-        "onChain": false
+        "onChain": true
     }
 ]

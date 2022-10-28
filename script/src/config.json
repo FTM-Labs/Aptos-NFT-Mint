@@ -9,8 +9,8 @@
         }
     },
     "candymachine": {
-        "cmPublicKey": "0xb599cfb3d5c8acb620625622de210940f4a8a419c75e8b290b5a4eacdebd4508",
-        "cmPrivateKey": "0x055cc09e5971ff77ce0020e2f25a3e4ba2f0ec7afa86cccb95caa21f7ccb85ca"
+        "cmPublicKey": "0x79fd22af34499300659e3b00c61e2b462e036316ebdb687fde058e0f098ad94c",
+        "cmPrivateKey": "0x3db9539e042696ae989ce838099fa0b843f03185eddc02ff9a0e441166a5b0ae"
     },
     "collection": {
         "assetDir": "../../sample-assets/images/",
