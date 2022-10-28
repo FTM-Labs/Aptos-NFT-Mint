@@ -1,0 +1,14 @@
+{
+  "name": "Sample Aptos NFT 1",
+  "description": "Sample NFT",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Aptos Logo"
+    },
+    {
+      "trait_type": "Number",
+      "value": "1"
+    }
+  ]
+}
