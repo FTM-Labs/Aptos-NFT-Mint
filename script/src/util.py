@@ -125,7 +125,7 @@ def uploadFolderToIpfs():
     os.chdir(_ASSET_FOLDER)
     failed_file_names = []
     for file in os.listdir():
-        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.webp')):
             file_name = file.split('.')[0]
             file_path = _ASSET_FOLDER + '/' + file
 
@@ -217,7 +217,7 @@ def uploadFolderToArweave():
     os.chdir(_ASSET_FOLDER)
     failed_file_names = []
     for file in os.listdir():
-        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.webp')):
             file_name, format = file.split('.')
             file_path = _ASSET_FOLDER + '/' + file
 

@@ -16,7 +16,7 @@ def verifyMetadataFiles(_ASSET_FOLDER, _METADATA_FOLDER, _COLLECTION_SIZE):
     is_valid = True
 
     assets = os.listdir(_ASSET_FOLDER)
-    images = [asset.split(".")[0] for asset in assets if asset.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'))]
+    images = [asset.split(".")[0] for asset in assets if asset.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.webp'))]
     metadatas = [metadata for metadata in os.listdir(_METADATA_FOLDER) if metadata.endswith(".json")]
     if len(images) - 1 != _COLLECTION_SIZE or len(metadatas) != _COLLECTION_SIZE:
         print("Metadata files error: Not the same amount of images and/or metadata files as the collectionSize in config.json.")
