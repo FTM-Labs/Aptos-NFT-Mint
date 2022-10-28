@@ -270,13 +270,21 @@ def uploadFolderToArweave():
                 data = json.load(metadata_file)
             token_name = data["name"]
             data['image'] = arweaveURI
+            # upload nft metadat file
+            wallet = Wallet(_ARWEAVE_WALLET_PATH)
+            tx = Transaction(wallet, data=data)
+            tx.add_tag('Content-Type', 'application/json')
+            tx.sign()
+            tx.send()
+
+            metadataUri = f"https://arweave.net/{tx.id}?ext=json"
             with open(metadataFilePath, 'w') as metadata_file:
                 json.dump(data, metadata_file, indent=4)
             uri_info = {
                 "name": file_name,
                 "token_name": token_name,
                 "uri": arweaveURI,
-                "metadata_uri": constants.IPFS_GATEWAY + metadataUri,
+                "metadata_uri": metadataUri,
                 "onChain": False
             }
 
