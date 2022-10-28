@@ -56,12 +56,12 @@ def mint(num_mints, amount_per_mint):
     cmAccount = get_cm_account()
     
     print(cmAccount.address())
-    if MODE == 'dev':
-        user = Account.generate()
-        for i in range(3):
-            faucet_client.fund_account(user.address(), 100000000)
-    else:
-        user = cmAccount
+    # if MODE == 'dev':
+    #     user = Account.generate()
+    #     for i in range(3):
+    #         faucet_client.fund_account(user.address(), 100000000)
+    # else:
+    user = cmAccount
     accountBalance = int (rest_client.account_balance(user.address().hex()))
     print(f"user account balance: {accountBalance}")
     print(f"\n=== Minting {amount_per_mint} for {num_mints} mints===")

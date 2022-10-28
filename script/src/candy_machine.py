@@ -54,7 +54,7 @@ class CandyMachine:
             config = json.load(f)
         self.account_addr = config['candymachine']['cmPublicKey']
         self.account_private = config['candymachine']['cmPrivateKey']
-        if self.mode == 'main' or self.mode == 'test':
+        if self.mode == 'main':
             account_addr = AccountAddress.from_hex(self.account_addr)
             account_private = ed25519.PrivateKey.from_hex(self.account_private)
             account = Account(account_addr, account_private)
@@ -72,7 +72,7 @@ class CandyMachine:
                 self.faucet_client.fund_account(account.address(), 100000000)
 
         while (True):
-            answer = "yes" if self.mode == "dev" else input("Enter yes if you have some aptos in your account: ") 
+            answer = "yes" if self.mode == "dev" else input("Enter yes if you have some aptos in the account above: ") 
             if answer == "yes":
                 try:
                     print(f"Checking account address {account.address()}")
