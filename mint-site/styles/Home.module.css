@@ -12,15 +12,6 @@
   align-items: center;
 }
 
-.title a {
-  color: #0070f3;
-  text-decoration: none;
-}
-.topcorner{
-  position:absolute;
-  top:15px;
-  right: 20px;
-}
 
 .button {
   background-color: #33ddaa;
@@ -49,13 +40,17 @@
 }
 
 .title {
-  position:absolute;
   top:15px;
   left: 20px;
   color: white;
   margin: 0;
   line-height: 1.15;
   font-size: 2rem;
+}
+
+.title.a {
+  color: #0070f3;
+  text-decoration: none;
 }
 
 .description {
@@ -88,20 +83,6 @@
     flex-direction: column;
   }
 }
-/* 
-@media (prefers-color-scheme: dark) {
-  .card,
-  .footer {
-    border-color: #222;
-  }
-  .code {
-    background: #111;
-  }
-  .logo img {
-    filter: invert(1);
-  }
-} */
-
 
 .defaultInput {
   height: fit-content;
@@ -111,8 +92,6 @@
   font-size: 1.5rem;
   padding-left: .5rem;
 }
-
-
 
 .connectWalletBtn {
   width: 100%;
@@ -153,7 +132,6 @@
 }
 
 
-
 .walletAdapterOption {
   color: white;
   background: #33ddaa;
@@ -182,19 +160,28 @@
 .walletAdapterOption:hover {
   filter: brightness(1);
 }
-/* .walletAdapterOption:hover img {
-  width: 35px;
-  height: 35px;
-} */
-
-
 
 .mintedNftCard {
   position: relative;
   width: 200px;
   height: auto;
   background: #111111;
-
-  /* z-index: 100; */
   transition: all .4s;
+}
+
+.collectionImage {
+  width: 100%;
+  height: 100%;
+  max-width: 480px;
+  max-height: 480px;
+}
+
+.header {
+  padding-top: 2em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
