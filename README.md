@@ -81,11 +81,15 @@ where the `cover.png` is the cover image for the collection.
 
 **The metadata and corresponding image should have the same name, eg: 1.png and 1.json**
 ### Aptos wallet
-For mainnet, you must prepare your own Aptos wallet and transfer some funds into it to cover the transaction fee.
+For mainnet and testnet [Aptos disabled the faucte to fund account in testnet], you must prepare your own Aptos wallet and transfer some funds into it to cover the transaction fee.
 
 Martian: https://chrome.google.com/webstore/detail/martian-aptos-wallet/efbglgofoippbgcjepnhiblaibcnclgk
 
 Petra: https://chrome.google.com/webstore/detail/petra-aptos-wallet/ejjladinnckdgjemekebdpeokbikhfci
+
+**Our code will some check for the metadata format, you can disable it if you want in the code**
+
+**Make sure the names for each nft (i.e the "name" field in individual NFT metadata) are unique. Two nft can not have the same name in the same collection. If you have duplicate names, there will be problem in your mint process.**
 
 ## Instructions
 
@@ -229,7 +233,8 @@ then run
 ```bash
 npm run dev
 ```
-
+# Sanity check
+use test mint function from the cli to check if the minting is successful (preferably on devnet and testnet first). The test mint will attempt to ming ONE nft from your collection. On devnet, the program will automatically drop 3 Aptos, on testnet and mainnet, make sure your cm account has enough funds.)
 
 # Troubleshooting
 
