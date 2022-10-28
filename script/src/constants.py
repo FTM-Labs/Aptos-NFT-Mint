@@ -1,6 +1,6 @@
 import os
 
-MODE = "main"
+MODE = "test"
 if MODE == "dev":
     NODE_URL = os.getenv("APTOS_NODE_URL", "https://fullnode.devnet.aptoslabs.com/v1")
     FAUCET_URL = os.getenv("APTOS_FAUCET_URL", "https://faucet.devnet.aptoslabs.com")
@@ -22,3 +22,4 @@ MAX_GAS = 1500000
 GAS_UNIT = 100
 BATCH_NUMBER = 200
 IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/"
+AR_RESOLVER = "https://arweave.net/"

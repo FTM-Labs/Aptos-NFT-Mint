@@ -20,7 +20,8 @@ if __name__ == "__main__":
         candy_machine.create()
         #create_candy_machine.create()
     elif index == 1:
-        create_candy_machine.retryFailedUploads()
+        candy_machine = CandyMachine(constants.MODE, constants.BATCH_NUMBER)
+        candy_machine.retryFailedUploads()
     elif index == 2:
         util.update_whitelist()
     elif index == 3:
@@ -30,4 +31,4 @@ if __name__ == "__main__":
     elif index == 5:
         util.update_mint_fee()
     else:
-        util.mint(1,1)
+        util.mint(num_mints = 1, amount_per_mint = 1)

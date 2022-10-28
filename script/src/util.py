@@ -64,7 +64,7 @@ def mint(num_mints, amount_per_mint):
     user = cmAccount
     accountBalance = int (rest_client.account_balance(user.address().hex()))
     print(f"user account balance: {accountBalance}")
-    print(f"\n=== Minting {amount_per_mint} for {num_mints} mints===")
+    print(f"\n=== Minting {amount_per_mint} nft per mint for {num_mints} mints===")
     for i in range(num_mints):
         txn_hash = rest_client.mint_tokens(
             user=user, admin_addr=cmAccount.address(), collection_name=_COLLECTION_NAME, amount=amount_per_mint)
