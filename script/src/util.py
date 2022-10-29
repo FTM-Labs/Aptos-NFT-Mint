@@ -272,7 +272,7 @@ def uploadFolderToArweave():
             data['image'] = arweaveURI
             # upload nft metadat file
             wallet = Wallet(_ARWEAVE_WALLET_PATH)
-            tx = Transaction(wallet, data=data)
+            tx = Transaction(wallet, data=json.dumps(data).encode('utf-8'))
             tx.add_tag('Content-Type', 'application/json')
             tx.sign()
             tx.send()
