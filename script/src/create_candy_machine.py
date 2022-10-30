@@ -12,85 +12,6 @@ import json
 import util
 from pick import pick
 
-def verifyMetadataFiles(_ASSET_FOLDER, _METADATA_FOLDER, _COLLECTION_SIZE):
-    is_valid = True
-
-    assets = os.listdir(_ASSET_FOLDER)
-    images = [asset.split(".")[0] for asset in assets if asset.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'))]
-    metadatas = [metadata for metadata in os.listdir(_METADATA_FOLDER) if metadata.endswith(".json")]
-    if len(images) - 1 != _COLLECTION_SIZE or len(metadatas) != _COLLECTION_SIZE:
-        print("Metadata files error: Not the same amount of images and/or metadata files as the collectionSize in config.json.")
-        is_valid = False
-
-    for index in range(1, _COLLECTION_SIZE + 1):
-        metadata = str(index) + ".json"
-        if metadata not in metadatas:
-            print("Metadata files error: Metadata files not following naming convention from 1 to collectionSize.")
-            is_valid = False
-
-        image = str(index)
-        if image not in images:
-            print("Metadata files error: Asset files not following naming convention from 1 to collectionSize.")
-            is_valid = False
-
-        with open(os.path.join(_METADATA_FOLDER, metadata), "r") as metadata_file:
-            metadata_config = json.load(metadata_file)
-            if "name" not in metadata_config.keys():
-                print(f"Metadata file {metadata} does not have a name.")
-                is_valid = False
-            else:
-                if type(metadata_config["name"]) != str or len(metadata_config["name"]) == 0:
-                    print(f"Metadata file {metadata} does not have a non empty string name value.")
-                    is_valid = False
-
-            if "description" not in metadata_config.keys():
-                print(f"Metadata file {metadata} does not have a description.")
-                is_valid = False
-            else:
-                if type(metadata_config["description"]) != str or len(metadata_config["description"]) == 0:
-                    print(f"Metadata file {metadata} does not have a non empty string description value.")
-                    is_valid = False
-
-
-            if "attributes" not in metadata_config.keys():
-                print(f"Metadata file {metadata} does not have attributes.")
-                is_valid = False
-            else:
-                if type(metadata_config["attributes"]) != list:
-                    print(f"Metadata file {metadata} attributes is not a list.")
-                    is_valid = False
-                for attribute in metadata_config["attributes"]:
-                    if "trait_type" not in attribute.keys():
-                        print(f"Metadata file {metadata} trait_type not present on an attribute")
-                        is_valid = False
-                    else:
-                        if type(attribute["trait_type"]) != str:
-                            print(f"Metadata file {metadata} attribute type {attribute['trait_type']} is not a string.")
-                            is_valid = False
-                        else:
-                            if len(attribute["trait_type"]) == 0:
-                                print(f"Metadata file {metadata} attribute type {attribute['trait_type']} is empty.")
-                                is_valid = False
-                    if "value" not in attribute.keys():
-                        print(f"Metadata file {metadata} value not present on an attribute")
-                        is_valid = False
-                    else:
-                        if type(attribute["value"]) != str:
-                            print(f"Metadata file {metadata} attribute value {attribute['value']} is not a string.")
-                            is_valid = False
-                        else:
-                            if len(attribute["value"]) == 0:
-                                print(f"Metadata file {metadata} attribute value {attribute['value']} is empty.")
-                                is_valid = False
-
-
-    if "cover" not in images:
-        print("Metadata files error: cover.png file not in assets folder.")
-        is_valid = False
-
-
-    return is_valid
-
 def create():
     print(f"Mode: {MODE}")
         
@@ -112,8 +33,8 @@ def create():
     _ACCOUNT_PRIVATE_KEY = config['candymachine']['cmPrivateKey']
     rest_client = RestClient(NODE_URL)
 
-    #print("\n=== Verifying assets and metadata ===")
-    #if not verifyMetadataFiles(_ASSET_FOLDER, _METADATA_FOLDER, _COLLECTION_SIZE): return
+    print("\n=== Verifying assets and metadata ===")
+    if not util.verifyMetadataFiles(): return
 
     print('\n=== Upload assets to storage solution ===')
     if not util.uploadFolder():
@@ -130,12 +51,13 @@ def create():
 
     setPresaleMintTime(rest_client, alice, _COLLECTION_NAME, _PRESALE_MINT_TIME)
     setPublicMintTime(rest_client, alice, _COLLECTION_NAME, _PUBLIC_MINT_TIME)
-
+    
+    update_mint_fee(rest_client, alice, _COLLECTION_NAME, _MINT_FEE)
     uploadNftsToCm(_ASSET_FOLDER, _COLLECTION_NAME, _METADATA_FOLDER, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, alice, rest_client)
-
+    #mint()
 def prepareCandyMachineAccount(_ACCOUNT_ADDRESS, _ACCOUNT_PRIVATE_KEY, rest_client, config):
     print("\n=== Preparing Candy Machine account ===")
-    if MODE == "dev" or MODE == "test":
+    if MODE == "dev":
         if len(_ACCOUNT_ADDRESS) == 66 and len(_ACCOUNT_PRIVATE_KEY) == 66:
             print("Candy machine addresses are already filled in config.json.")
             _, index = pick(["yes", "no"], "Candy machine addresses are already filled in config.json. Do you wish to override them with new funded accounts?")
@@ -143,6 +65,7 @@ def prepareCandyMachineAccount(_ACCOUNT_ADDRESS, _ACCOUNT_PRIVATE_KEY, rest_clie
         alice = Account.generate()
         faucet_client = FaucetClient(FAUCET_URL, rest_client)
         for i in range(3):
+            print(i)
             faucet_client.fund_account(alice.address(), 100000000)
     else:
         accountAddress = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
@@ -205,6 +128,14 @@ def createCollection(
     rest_client.wait_for_transaction(txn_hash)
     print("\n Success, txn hash: " + txn_hash)
 
+def update_mint_fee(rest_client, alice, _COLLECTION_NAME, _MINT_FEE):
+    print(f"checking mint fee config {_MINT_FEE}")
+    txn_hash = rest_client.set_mint_fee_per_mille(
+        alice, _COLLECTION_NAME, _MINT_FEE
+    )
+    rest_client.wait_for_transaction(txn_hash)
+    print("\n Success, mint fee per mille is set to:: " + str(_MINT_FEE) + " txn hash: " + txn_hash)
+
 def setPresaleMintTime(rest_client, alice, _COLLECTION_NAME, _PRESALE_MINT_TIME):
     print("\n=== Setting presale mint time ===")
     txn_hash = rest_client.set_presale_mint_time(
@@ -256,9 +187,7 @@ def uploadNftsToCm(
             for trait in data['attributes']:
                 if isinstance(trait['value'], str): 
                     propertyKey.append(trait['trait_type'])
-                    # todo: wait aptos update on type of property values
                     propertyValue.append(trait['value'].encode())
-                    #propertyValue.append([1])
                     propertyType.append('String')
         nfts.append(
             {"nft": NFT(tmp_name, tmp_uri, tmp_description, propertyKey, propertyValue, propertyType), "uriInfoIndex": index}
@@ -348,33 +277,36 @@ def retryFailedUploads():
 
     uploadNftsToCm(_ASSET_FOLDER, _COLLECTION_NAME, _METADATA_FOLDER, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, alice, rest_client)
 
-# def mint():
-#     with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
-#         config = json.load(f)
+def mint():
+    with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
+        config = json.load(f)
 
-#     _COLLECTION_NAME = config['collection']['collectionName']
-#     _ACCOUNT_ADDRESS = config['candymachine']['cmPublicKey']
-#     _ACCOUNT_PRIVATE_KEY = config['candymachine']['cmPrivateKey']
-#     rest_client = RestClient(NODE_URL)
+    _COLLECTION_NAME = config['collection']['collectionName']
+    _ACCOUNT_ADDRESS = config['candymachine']['cmPublicKey']
+    _ACCOUNT_PRIVATE_KEY = config['candymachine']['cmPrivateKey']
+    rest_client = RestClient(NODE_URL)
 
-#     accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
-#     privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
-#     alice = Account(accountAddres, privateKey)
-#     #Testing mint
-#     print("\n=== Bob going to mint NFT ===")
-#     bob = Account.generate()
-#     print(f"bob address: {bob.address()}")
-#     print(f"bob private: {bob.private_key}")
-#     print(f'Public key: {alice.address()}\n')
-#     print(f'Private key: {alice.private_key}\n')
+    accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
+    privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
+    alice = Account(accountAddres, privateKey)
+    #Testing mint
+    print("\n=== Bob going to mint NFT ===")
+    if MODE == 'test' or MODE == 'main':
+        bob = alice
+    else:
+        bob = Account.generate()
+    print(f"bob address: {bob.address()}")
+    print(f"bob private: {bob.private_key}")
+    print(f'Public key: {alice.address()}\n')
+    print(f'Private key: {alice.private_key}\n')
+    for i in range(3):
+        FaucetClient(FAUCET_URL, rest_client).fund_account(bob.address(), 100000000)
+    accountBalance = int (rest_client.account_balance(bob.address().hex()))
+    print(accountBalance)
+    txn_hash = rest_client.mint_tokens(
+        user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=1)
 
-#     FaucetClient(FAUCET_URL, rest_client).fund_account(bob.address(), 20000000000)
-#     accountBalance = int (rest_client.account_balance(bob.address().hex()))
-#     print(accountBalance)
-#     txn_hash = rest_client.mint_tokens(
-#         user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=1)
-
-#     rest_client.wait_for_transaction(txn_hash)
-#     print("\n Success, txn hash: " + txn_hash)
+    rest_client.wait_for_transaction(txn_hash)
+    print("\n Success, txn hash: " + txn_hash)
 
 # mint()
