@@ -3,30 +3,27 @@
         "solution": "pinata",
         "pinata": {
             "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
-            "pinataPublicKey": "4b667c45c40242b041da",
-            "pinataSecretKey": "aceba97fe40b499a253b1dc1d61d2cab6d1a44e74d977ac87f7614fa3a1c837b"
-        },
-        "arweave": {
-            "keyfilePath": "/Users/Shared/arweave-keyfile.json"
+            "pinataPublicKey": "e109d3b96e49c2bbb522",
+            "pinataSecretKey": "8d945e6c4b8bf05081827fb32b4366e2adf4a45c1922eb5fe22fabd0451f6d0e"
         }
     },
     "candymachine": {
-        "cmPublicKey": "0x3b3a0901cfc91b289cd16b62b28fd850e52a2921d463945a3722c33a81bad453",
-        "cmPrivateKey": "0x80fd0f609fe180f44db7c3dde7704daf53a621e602a86bf461ac2cfe0b28370a"
+        "cmPublicKey": "0xea556867064bb111cac0c090496239ea34fd5c2863b938d067fb6efa0061f85f",
+        "cmPrivateKey": "0xc2846984701bf0bb50a0ddf9c451d1d1c980d6ed3b07bdf8f71b6ee1ed7bf950"
     },
     "collection": {
-        "assetDir": "/Users/Shared/assets/images",
-        "metadataDir": "/Users/Shared/assets/metadata",
-        "collectionName": "TestCollection101",
-        "collectionDescription": "placeholder",
-        "collectionCover": "",
+        "assetDir": "C:/Users/caleb/Desktop/Aptos-NFT-Mint/assets/images",
+        "metadataDir": "C:/Users/caleb/Desktop/Aptos-NFT-Mint/assets/metadata",
+        "collectionName": "Bamboo Test",
+        "collectionDescription": "Test collection for Bamboo",
+        "collectionCover": "C:/Users/caleb/Desktop/Aptos-NFT-Mint/assets/images/cover.png",
         "collectionSize": 10,
         "maxMintPerWallet": 3,
-        "mintFee": 10,
+        "mintFee": 0,
         "royalty_points_denominator": 1000,
         "royalty_points_numerator": 100,
-        "presaleMintTime": 100000000,
-        "publicMintTime": 100000000,
-        "whitelistDir": "/Users/Shared/assets"
+        "presaleMintTime": 0,
+        "publicMintTime": 0,
+        "whitelistDir": "C:/Users/caleb/Desktop/Aptos-NFT-Mint/whitelist.txt"
     }
 }
