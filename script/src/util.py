@@ -4,7 +4,7 @@ from client import RestClient
 from aptos_sdk.client import FaucetClient
 import os
 import sys
-from constants import NODE_URL, BATCH_NUMBER, FAUCET_URL, MODE
+from constants import NODE_URL, BATCH_NUMBER, FAUCET_URL, MODE, SUPPORTED_IMAGE_FORMATS
 from aptos_sdk.account_address import AccountAddress
 from aptos_sdk.account import Account
 from aptos_sdk import ed25519
@@ -18,8 +18,6 @@ import io
 from PIL import Image
 from arweave.arweave_lib import Wallet, Transaction
 import logging
-
-from script.src.constants import SUPPORTED_IMAGE_FORMATS
 
 rest_client = RestClient(NODE_URL)
 faucet_client = FaucetClient(FAUCET_URL, rest_client)
