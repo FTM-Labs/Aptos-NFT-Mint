@@ -19,6 +19,8 @@ from PIL import Image
 from arweave.arweave_lib import Wallet, Transaction
 import logging
 
+from script.src.constants import SUPPORTED_IMAGE_FORMATS
+
 rest_client = RestClient(NODE_URL)
 faucet_client = FaucetClient(FAUCET_URL, rest_client)
 
@@ -155,7 +157,7 @@ def uploadFolderToIpfs():
     failed_file_names = []
 
     for file in os.listdir():
-        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+        if file.endswith(SUPPORTED_IMAGE_FORMATS):
             file_name = file.split('.')[0]
             file_path = _ASSET_FOLDER + '/' + file
             if isFileAlreadyUploaded(file_name, uri_list): continue
@@ -253,7 +255,7 @@ def uploadFolderToArweave():
     os.chdir(_ASSET_FOLDER)
     failed_file_names = []
     for file in os.listdir():
-        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+        if file.endswith(SUPPORTED_IMAGE_FORMATS):
             file_name, format = file.split('.')
             file_path = _ASSET_FOLDER + '/' + file
 
@@ -305,7 +307,7 @@ def verifyMetadataFiles():
     is_valid = True
 
     assets = os.listdir(_ASSET_FOLDER)
-    images = [asset.split(".")[0] for asset in assets if asset.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'))]
+    images = [asset.split(".")[0] for asset in assets if asset.endswith(SUPPORTED_IMAGE_FORMATS)]
     metadatas = [metadata for metadata in os.listdir(_METADATA_FOLDER) if metadata.endswith(".json")]
     token_names = []
     if len(metadatas) != _COLLECTION_SIZE:

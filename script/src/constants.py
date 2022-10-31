@@ -22,4 +22,6 @@ MAX_GAS = 1500000
 GAS_UNIT = 100
 BATCH_NUMBER = 200
 IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/"
+SUPPORTED_IMAGE_FORMATS = ('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.webp')
 AR_RESOLVER = "https://arweave.net/"
+
