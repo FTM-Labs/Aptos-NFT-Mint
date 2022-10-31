@@ -66,7 +66,7 @@ def mint(num_mints, amount_per_mint):
     user = cmAccount
     accountBalance = int (rest_client.account_balance(user.address().hex()))
     print(f"user account balance: {accountBalance}")
-    print(f"\n=== Minting {amount_per_mint} for {num_mints} mints===")
+    print(f"\n=== Minting {amount_per_mint} nft per mint for {num_mints} mints===")
     for i in range(num_mints):
         txn_hash = rest_client.mint_tokens(
             user=user, admin_addr=cmAccount.address(), collection_name=_COLLECTION_NAME, amount=amount_per_mint)
@@ -144,7 +144,7 @@ def uploadToIpfs(file):
         ipfsHash = jsonResponse['IpfsHash']
         ipfsUri = constants.IPFS_GATEWAY + ipfsHash
         print("Upload success! View file at: " + ipfsUri)
-        return ipfsUri
+        return ipfsHash
     except requests.exceptions.HTTPError as e:
         print (e.response.text)
         return None
@@ -162,8 +162,8 @@ def uploadFolderToIpfs():
             file_path = _ASSET_FOLDER + '/' + file
             if isFileAlreadyUploaded(file_name, uri_list): continue
             print('uploading file: ' + file_path)
-            ipfsUri = uploadToIpfs(file_path)
-            if (ipfsUri == None): 
+            ipfsHash = uploadToIpfs(file_path)
+            if (ipfsHash == None): 
                 print(f"FAILED UPLOAD of file {file_name}")
                 failed_file_names.append(file_name)
                 continue
@@ -171,15 +171,15 @@ def uploadFolderToIpfs():
             with open(metadataFilePath) as metadata_file:
                 data = json.load(metadata_file)
             token_name = data["name"]
-            data['image'] = ipfsUri
+            data['image'] = constants.IPFS_GATEWAY + ipfsHash
             with open(metadataFilePath, 'w') as metadata_file:
                 json.dump(data, metadata_file, indent=4)
             metadataUri = uploadToIpfs(metadataFilePath)
             uri_info = {
                 "name": file_name,
                 "token_name": token_name,
-                "uri": ipfsUri,
-                "metadata_uri": metadataUri,
+                "uri": constants.IPFS_GATEWAY + ipfsHash,
+                "metadata_uri": constants.IPFS_GATEWAY + metadataUri,
                 "onChain": False
             }
             uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
@@ -271,13 +271,22 @@ def uploadFolderToArweave():
             with open(metadataFilePath) as metadata_file:
                 data = json.load(metadata_file)
             token_name = data["name"]
-            data['image'] = ipfsUri
+            data['image'] = arweaveURI
+            # upload nft metadat file
+            wallet = Wallet(_ARWEAVE_WALLET_PATH)
+            tx = Transaction(wallet, data=json.dumps(data).encode('utf-8'))
+            tx.add_tag('Content-Type', 'application/json')
+            tx.sign()
+            tx.send()
+
+            metadataUri = f"https://arweave.net/{tx.id}?ext=json"
             with open(metadataFilePath, 'w') as metadata_file:
                 json.dump(data, metadata_file, indent=4)
             uri_info = {
                 "name": file_name,
                 "token_name": token_name,
                 "uri": arweaveURI,
+                "metadata_uri": metadataUri,
                 "onChain": False
             }
 

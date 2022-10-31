@@ -10,6 +10,7 @@ import random
 import constants
 import util
 import datetime
+from pick import pick
 
 class CandyMachine:
     def __init__(self, mode, batch_num):
@@ -32,8 +33,6 @@ class CandyMachine:
         if self.faucet:
             self.faucet_client = FaucetClient(self.faucet, self.rest_client)
 
-        self.prepareAccount()
-
         with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
             config = json.load(f)
         self.asset_folder = config['collection']['assetDir']
@@ -52,18 +51,15 @@ class CandyMachine:
     def prepareAccount(self):
         with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
             config = json.load(f)
-        self.account_addr = config['candymachine']['cmPublicKey']
-        self.account_private = config['candymachine']['cmPrivateKey']
-        if self.mode == 'main':
-            account_addr = AccountAddress.from_hex(self.account_addr)
-            account_private = ed25519.PrivateKey.from_hex(self.account_private)
-            account = Account(account_addr, account_private)
+        if len(config['candymachine']['cmPublicKey']) == 66 and len(config['candymachine']['cmPrivateKey']) == 66:
+            print("Candy machine addresses are already filled in config.json.")
+            _, index = pick(["yes", "no"], "Candy machine addresses are already filled in config.json. Do you wish to override them with new funded accounts?")
+            if index == 1:
+                account = self.get_existing_account()
+            else:
+                account = self.generate_new_account()
         else:
-            account = Account.generate()
-            config['candymachine']['cmPublicKey'] = str(account.address())
-            config['candymachine']['cmPrivateKey'] = str(account.private_key)
-            with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
-                json.dump(config, configfile, indent=4)
+            account = self.generate_new_account()
         print(f'Public key: {account.address()}\n')
         print(f'Private key: {account.private_key}\n')
         if self.mode == "dev":
@@ -86,6 +82,28 @@ class CandyMachine:
             else:
                 continue
         self.account = account
+    
+    def get_existing_account(self):
+        with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
+            config = json.load(f)
+        self.account_addr = config['candymachine']['cmPublicKey']
+        self.account_private = config['candymachine']['cmPrivateKey']
+        account_addr = AccountAddress.from_hex(self.account_addr)
+        account_private = ed25519.PrivateKey.from_hex(self.account_private)
+        account = Account(account_addr, account_private)
+        return account
+    
+    def generate_new_account(self):
+        with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
+            config = json.load(f)
+        account = Account.generate()
+        config['candymachine']['cmPublicKey'] = str(account.address())
+        config['candymachine']['cmPrivateKey'] = str(account.private_key)
+        self.account_addr = config['candymachine']['cmPublicKey']
+        self.account_private = config['candymachine']['cmPrivateKey']
+        with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
+            json.dump(config, configfile, indent=4)
+        return account
 
     # TODO: check if hashlips metadata has collection name field
     def fetch_collection_name_and_description(self):
@@ -100,6 +118,8 @@ class CandyMachine:
                 json.dump(config, configfile, indent=4)
         
     def create(self):
+        print("\n=== Preparing candy machine account ===")
+        self.prepareAccount()
         print("\n=== Verifying assets and metadata ===")
         if not util.verifyMetadataFiles(): return
 
@@ -248,11 +268,11 @@ class CandyMachine:
             print(f"Not all nfts ({len(successfulUploadIndexes)} out of {len(nfts)}) were uploaded successfully to the candy machine. Try to \"Retry failed uploads\".")
 
     def retryFailedUploads(self):
-
+        self.account = self.get_existing_account()
         if len(self.account_addr) != 66 or len(self.account_private) != 66:
             print("Can't continue upload as CM info is not valid in config file")
 
-        self.uploadNftsToCm(self.asset_folder, self.collection_name, self.metadata_folder, self.royalty_points_denominator, self.royalty_points_numerator, self.account, self.rest_client)
+        self.uploadNftsToCm()
     def update_mint_fee(self):
         print("\n=== Setting  mint fee ===")
         txn_hash = self.rest_client.set_mint_fee_per_mille(

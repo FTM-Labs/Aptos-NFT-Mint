@@ -1,6 +1,6 @@
 import os
 
-MODE = "main"
+MODE = "test"
 if MODE == "dev":
     NODE_URL = os.getenv("APTOS_NODE_URL", "https://fullnode.devnet.aptoslabs.com/v1")
     FAUCET_URL = os.getenv("APTOS_FAUCET_URL", "https://faucet.devnet.aptoslabs.com")
@@ -23,3 +23,5 @@ GAS_UNIT = 100
 BATCH_NUMBER = 200
 IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/"
 SUPPORTED_IMAGE_FORMATS = ('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.webp')
+AR_RESOLVER = "https://arweave.net/"
+
