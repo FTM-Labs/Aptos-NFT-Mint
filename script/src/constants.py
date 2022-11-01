@@ -1,6 +1,6 @@
 import os
 
-MODE = "test"
+MODE = "dev"
 if MODE == "dev":
     NODE_URL = os.getenv("APTOS_NODE_URL", "https://fullnode.devnet.aptoslabs.com/v1")
     FAUCET_URL = os.getenv("APTOS_FAUCET_URL", "https://faucet.devnet.aptoslabs.com")
@@ -17,7 +17,7 @@ TEST_NET_FAUCET = os.getenv("APTOS_FAUCET_URL", "https://faucet.testnet.aptoslab
 DEV_NET_NODE = os.getenv("APTOS_NODE_URL", "https://fullnode.devnet.aptoslabs.com/v1")
 DEV_NET_FAUCET = os.getenv("APTOS_FAUCET_URL", "https://faucet.devnet.aptoslabs.com")
 
-CONTRACT_ADDRESS = "0x481efbf0c3cbec627b5f5674287d4ae6ee770da5949dcfe698a8520108236a33::candy_machine_v2"
+CONTRACT_ADDRESS = "0xc17197699c1a5c2d594bda3482e06cda9a7fe87378cbaec2b55aacd03e3f45d3::candy_machine_v2"
 MAX_GAS = 1500000
 GAS_UNIT = 100
 BATCH_NUMBER = 200
