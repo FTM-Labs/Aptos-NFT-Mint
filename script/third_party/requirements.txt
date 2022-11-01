@@ -5,3 +5,4 @@ pick
 aptos-sdk
 Pillow
 arweave-python-client
+load_dotenv

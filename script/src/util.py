@@ -18,9 +18,12 @@ import io
 from PIL import Image
 from arweave.arweave_lib import Wallet, Transaction
 import logging
+from dotenv import load_dotenv
 
 rest_client = RestClient(NODE_URL)
 faucet_client = FaucetClient(FAUCET_URL, rest_client)
+
+load_dotenv()
 
 with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
     config = json.load(f)
@@ -34,8 +37,8 @@ _WL_DIR = config['collection']['whitelistDir']
 _STORAGE_SOLUTION = config["storage"]["solution"]
 _ARWEAVE_WALLET_PATH = config["storage"]["arweave"]["keyfilePath"]
 _API_ENDPOINT = config["storage"]['pinata']['pinataApi']
-_API_KEY = config["storage"]['pinata']['pinataPublicKey']
-_API_SECRETE_KEY = config["storage"]['pinata']['pinataSecretKey']
+_API_KEY = os.getenv("PINATA_PUBLIC_KEY")
+_API_SECRETE_KEY = os.getenv("PINATA_SECRET_KEY")
 _ASSET_FOLDER = config['collection']['assetDir']
 _HEADERS = {
     'pinata_api_key': _API_KEY,

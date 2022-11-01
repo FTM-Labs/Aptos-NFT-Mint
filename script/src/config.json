@@ -2,31 +2,29 @@
     "storage": {
         "solution": "pinata",
         "pinata": {
-            "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
-            "pinataPublicKey": "4b667c45c40242b041da",
-            "pinataSecretKey": "aceba97fe40b499a253b1dc1d61d2cab6d1a44e74d977ac87f7614fa3a1c837b"
+            "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS"
         },
         "arweave": {
             "keyfilePath": "/Users/Shared/arweave-keyfile.json"
         }
     },
     "candymachine": {
-        "cmPublicKey": "0x3b3a0901cfc91b289cd16b62b28fd850e52a2921d463945a3722c33a81bad453",
-        "cmPrivateKey": "0x80fd0f609fe180f44db7c3dde7704daf53a621e602a86bf461ac2cfe0b28370a"
+        "cmPublicKey": "0x79fd22af34499300659e3b00c61e2b462e036316ebdb687fde058e0f098ad94c",
+        "cmPrivateKey": "0x3db9539e042696ae989ce838099fa0b843f03185eddc02ff9a0e441166a5b0ae"
     },
     "collection": {
-        "assetDir": "/Users/Shared/assets/images",
-        "metadataDir": "/Users/Shared/assets/metadata",
+        "assetDir": "../../sample-assets/images/",
+        "metadataDir": "../../sample-assets/metadata/",
         "collectionName": "TestCollection101",
         "collectionDescription": "placeholder",
-        "collectionCover": "",
-        "collectionSize": 10,
-        "maxMintPerWallet": 3,
-        "mintFee": 10,
+        "collectionCover": "../../sample-assets/images/cover",
+        "collectionSize": 5,
+        "maxMintPerWallet": 1,
+        "mintFee": 1000,
         "royalty_points_denominator": 1000,
         "royalty_points_numerator": 100,
         "presaleMintTime": 100000000,
         "publicMintTime": 100000000,
-        "whitelistDir": "/Users/Shared/assets"
+        "whitelistDir": "../sample-assets/sample-whitelist"
     }
 }
