@@ -16,7 +16,7 @@ import datetime
 
 import io
 from PIL import Image
-from arweave.arweave_lib import Wallet, Transaction
+# from arweave.arweave_lib import Wallet, Transaction
 import logging
 
 rest_client = RestClient(NODE_URL)
@@ -32,7 +32,7 @@ _COLLECTION_NAME = config['collection']['collectionName']
 _COLLECTION_SIZE = int(config['collection']['collectionSize'])
 _WL_DIR = config['collection']['whitelistDir']
 _STORAGE_SOLUTION = config["storage"]["solution"]
-_ARWEAVE_WALLET_PATH = config["storage"]["arweave"]["keyfilePath"]
+# _ARWEAVE_WALLET_PATH = config["storage"]["arweave"]["keyfilePath"]
 _API_ENDPOINT = config["storage"]['pinata']['pinataApi']
 _API_KEY = config["storage"]['pinata']['pinataPublicKey']
 _API_SECRETE_KEY = config["storage"]['pinata']['pinataSecretKey']
@@ -192,29 +192,29 @@ def uploadFolderToIpfs():
     return len(failed_file_names) == 0 # whether all files were uploaded or not
 
 
-def uploadToArweave(file_path, format: str):
-    try:
-        wallet = Wallet(_ARWEAVE_WALLET_PATH)
+# def uploadToArweave(file_path, format: str):
+#     try:
+#         wallet = Wallet(_ARWEAVE_WALLET_PATH)
 
-        img = Image.open(file_path)
-        with io.BytesIO() as output:
-            img.save(output, format=format.upper())
-            imageData = output.getvalue()
+#         img = Image.open(file_path)
+#         with io.BytesIO() as output:
+#             img.save(output, format=format.upper())
+#             imageData = output.getvalue()
 
-            tx = Transaction(wallet, data=imageData)
-            tx.add_tag('Content-Type', f'image/{format}')
-            tx.sign()
-            tx.send()
+#             tx = Transaction(wallet, data=imageData)
+#             tx.add_tag('Content-Type', f'image/{format}')
+#             tx.sign()
+#             tx.send()
 
-            uri = f"https://arweave.net/{tx.id}?ext={format}"
-            return uri
-    except:
-        return None
+#             uri = f"https://arweave.net/{tx.id}?ext={format}"
+#             return uri
+#     except:
+#         return None
 
-def silenceArweaveTransactions():
-    logger = logging.getLogger("arweave_lib")
-    # only log really bad events
-    logger.setLevel(logging.ERROR)
+# def silenceArweaveTransactions():
+#     logger = logging.getLogger("arweave_lib")
+#     # only log really bad events
+#     logger.setLevel(logging.ERROR)
 
 def getUriList(uri_list_file_path):
     uri_list = []
@@ -244,60 +244,60 @@ def saveUploadInfo(uri_info, uri_list, uri_list_file_path):
         json.dump(uri_list, uri_list_file, indent=4)
     return uri_list
 
-def uploadFolderToArweave():
-    silenceArweaveTransactions()
+# def uploadFolderToArweave():
+#     silenceArweaveTransactions()
 
-    uri_list_file_path = os.path.join(_ASSET_FOLDER, "image_uris.json")
-    uri_list = getUriList(uri_list_file_path)
+#     uri_list_file_path = os.path.join(_ASSET_FOLDER, "image_uris.json")
+#     uri_list = getUriList(uri_list_file_path)
 
-    os.chdir(_ASSET_FOLDER)
-    failed_file_names = []
-    for file in os.listdir():
-        if file.endswith(SUPPORTED_IMAGE_FORMATS):
-            file_name, format = file.split('.')
-            file_path = _ASSET_FOLDER + '/' + file
+#     os.chdir(_ASSET_FOLDER)
+#     failed_file_names = []
+#     for file in os.listdir():
+#         if file.endswith(SUPPORTED_IMAGE_FORMATS):
+#             file_name, format = file.split('.')
+#             file_path = _ASSET_FOLDER + '/' + file
 
-            if isFileAlreadyUploaded(file_name, uri_list): continue
+#             if isFileAlreadyUploaded(file_name, uri_list): continue
 
-            print('uploading file: ' + file_path + " of format: " + format)
-            arweaveURI = uploadToArweave(file_path, format)
-            if (arweaveURI == None): 
-                print(f"FAILED UPLOAD of file {file_name}")
-                failed_file_names.append(file_name)
-                continue
-            metadataFilePath = _METADATA_FOLDER + '/' + file_name + '.json'
-            with open(metadataFilePath) as metadata_file:
-                data = json.load(metadata_file)
-            token_name = data["name"]
-            data['image'] = arweaveURI
-            # upload nft metadat file
-            wallet = Wallet(_ARWEAVE_WALLET_PATH)
-            tx = Transaction(wallet, data=json.dumps(data).encode('utf-8'))
-            tx.add_tag('Content-Type', 'application/json')
-            tx.sign()
-            tx.send()
+#             print('uploading file: ' + file_path + " of format: " + format)
+#             arweaveURI = uploadToArweave(file_path, format)
+#             if (arweaveURI == None): 
+#                 print(f"FAILED UPLOAD of file {file_name}")
+#                 failed_file_names.append(file_name)
+#                 continue
+#             metadataFilePath = _METADATA_FOLDER + '/' + file_name + '.json'
+#             with open(metadataFilePath) as metadata_file:
+#                 data = json.load(metadata_file)
+#             token_name = data["name"]
+#             data['image'] = arweaveURI
+#             # upload nft metadat file
+#             wallet = Wallet(_ARWEAVE_WALLET_PATH)
+#             tx = Transaction(wallet, data=json.dumps(data).encode('utf-8'))
+#             tx.add_tag('Content-Type', 'application/json')
+#             tx.sign()
+#             tx.send()
 
-            metadataUri = f"https://arweave.net/{tx.id}?ext=json"
-            with open(metadataFilePath, 'w') as metadata_file:
-                json.dump(data, metadata_file, indent=4)
-            uri_info = {
-                "name": file_name,
-                "token_name": token_name,
-                "uri": arweaveURI,
-                "metadata_uri": metadataUri,
-                "onChain": False
-            }
+#             metadataUri = f"https://arweave.net/{tx.id}?ext=json"
+#             with open(metadataFilePath, 'w') as metadata_file:
+#                 json.dump(data, metadata_file, indent=4)
+#             uri_info = {
+#                 "name": file_name,
+#                 "token_name": token_name,
+#                 "uri": arweaveURI,
+#                 "metadata_uri": metadataUri,
+#                 "onChain": False
+#             }
 
-            uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
+#             uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
             
     
-    print(f"Files that failed to upload: {failed_file_names}")
-    if len(failed_file_names) == 0: print("All images were uploaded successfully")
-    return len(failed_file_names) == 0 # whether all files were uploaded or not
+#     print(f"Files that failed to upload: {failed_file_names}")
+#     if len(failed_file_names) == 0: print("All images were uploaded successfully")
+#     return len(failed_file_names) == 0 # whether all files were uploaded or not
 
 def uploadFolder():
     if _STORAGE_SOLUTION == "pinata": return uploadFolderToIpfs()
-    elif _STORAGE_SOLUTION == "arweave": return uploadFolderToArweave()
+    # elif _STORAGE_SOLUTION == "arweave": return uploadFolderToArweave()
     else: raise Exception("Storage solution is not supported. Please select either pinata or arweave")
 
 

@@ -12,9 +12,10 @@ import json
 import util
 from pick import pick
 
+
 def create():
     print(f"Mode: {MODE}")
-        
+
     with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
         config = json.load(f)
     _ASSET_FOLDER = config['collection']['assetDir']
@@ -34,7 +35,8 @@ def create():
     rest_client = RestClient(NODE_URL)
 
     print("\n=== Verifying assets and metadata ===")
-    if not util.verifyMetadataFiles(): return
+    if not util.verifyMetadataFiles():
+        return
 
     print('\n=== Upload assets to storage solution ===')
     if not util.uploadFolder():
@@ -42,26 +44,35 @@ def create():
         return
 
     try:
-        alice = prepareCandyMachineAccount(_ACCOUNT_ADDRESS, _ACCOUNT_PRIVATE_KEY, rest_client, config)
-    except: return
-    
+        alice = prepareCandyMachineAccount(
+            _ACCOUNT_ADDRESS, _ACCOUNT_PRIVATE_KEY, rest_client, config)
+    except:
+        return
+
     createCandyMachine(rest_client, alice, _ASSET_FOLDER)
 
-    createCollection(rest_client, alice, _COLLECTION_NAME, _COLLECTION_DESCRIPTION, _COLLECTION_COVER, _MAX_MINTS_PER_WALLET, _MINT_FEE, _PUBLIC_MINT_TIME, _PRESALE_MINT_TIME)
+    createCollection(rest_client, alice, _COLLECTION_NAME, _COLLECTION_DESCRIPTION,
+                     _COLLECTION_COVER, _MAX_MINTS_PER_WALLET, _MINT_FEE, _PUBLIC_MINT_TIME, _PRESALE_MINT_TIME)
 
-    setPresaleMintTime(rest_client, alice, _COLLECTION_NAME, _PRESALE_MINT_TIME)
+    setPresaleMintTime(rest_client, alice,
+                       _COLLECTION_NAME, _PRESALE_MINT_TIME)
     setPublicMintTime(rest_client, alice, _COLLECTION_NAME, _PUBLIC_MINT_TIME)
-    
+
     update_mint_fee(rest_client, alice, _COLLECTION_NAME, _MINT_FEE)
-    uploadNftsToCm(_ASSET_FOLDER, _COLLECTION_NAME, _METADATA_FOLDER, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, alice, rest_client)
-    #mint()
+    uploadNftsToCm(_ASSET_FOLDER, _COLLECTION_NAME, _METADATA_FOLDER,
+                   _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, alice, rest_client)
+    # mint()
+
+
 def prepareCandyMachineAccount(_ACCOUNT_ADDRESS, _ACCOUNT_PRIVATE_KEY, rest_client, config):
     print("\n=== Preparing Candy Machine account ===")
     if MODE == "dev":
         if len(_ACCOUNT_ADDRESS) == 66 and len(_ACCOUNT_PRIVATE_KEY) == 66:
             print("Candy machine addresses are already filled in config.json.")
-            _, index = pick(["yes", "no"], "Candy machine addresses are already filled in config.json. Do you wish to override them with new funded accounts?")
-            if index == 1: raise Exception
+            _, index = pick(
+                ["yes", "no"], "Candy machine addresses are already filled in config.json. Do you wish to override them with new funded accounts?")
+            if index == 1:
+                raise Exception
         alice = Account.generate()
         faucet_client = FaucetClient(FAUCET_URL, rest_client)
         for i in range(3):
@@ -77,14 +88,17 @@ def prepareCandyMachineAccount(_ACCOUNT_ADDRESS, _ACCOUNT_PRIVATE_KEY, rest_clie
     config['candymachine']['cmPrivateKey'] = str(alice.private_key)
     with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
         json.dump(config, configfile, indent=4)
-    
+
     while (True):
-        answer = "yes" if MODE == "dev" or MODE == "test" else input("Enter yes if you have some aptos in your account: ") 
+        answer = "yes" if MODE == "dev" or MODE == "test" else input(
+            "Enter yes if you have some aptos in your account: ")
         if answer == "yes":
             try:
-                accountBalance = int (rest_client.account_balance(alice.address().hex()))
+                accountBalance = int(
+                    rest_client.account_balance(alice.address().hex()))
             except TypeError:
-                print("Please add some Aptos to your candy machine account and try again.")
+                print(
+                    "Please add some Aptos to your candy machine account and try again.")
                 raise Exception("Not enough funds in account")
             if accountBalance > 2000:
                 print(f'Balance: {accountBalance}\n')
@@ -93,12 +107,14 @@ def prepareCandyMachineAccount(_ACCOUNT_ADDRESS, _ACCOUNT_PRIVATE_KEY, rest_clie
             continue
     return alice
 
+
 def createCandyMachine(rest_client, alice, _ASSET_FOLDER):
     print("\n=== Creating Candy Machine ===")
     txn_hash = rest_client.create_candy_machine(alice)
     rest_client.wait_for_transaction(txn_hash)
     print("\n Success, txn hash: " + txn_hash)
     resetChainInfoFromUriInfo(_ASSET_FOLDER)
+
 
 def resetChainInfoFromUriInfo(_ASSET_FOLDER):
     uri_list_file_path = os.path.join(_ASSET_FOLDER, "image_uris.json")
@@ -110,15 +126,16 @@ def resetChainInfoFromUriInfo(_ASSET_FOLDER):
         json.dump(uri_list, uri_list_file, indent=4)
         uri_list_file.truncate()
 
+
 def createCollection(
     rest_client, alice, _COLLECTION_NAME, _COLLECTION_DESCRIPTION, _COLLECTION_COVER, _MAX_MINTS_PER_WALLET, _MINT_FEE, _PUBLIC_MINT_TIME, _PRESALE_MINT_TIME
 ):
     print("\n=== Creating Collection ===")
 
     txn_hash = rest_client.create_collection(
-        alice, 
-        _COLLECTION_NAME, 
-        _COLLECTION_DESCRIPTION, 
+        alice,
+        _COLLECTION_NAME,
+        _COLLECTION_DESCRIPTION,
         _COLLECTION_COVER,
         _MAX_MINTS_PER_WALLET,
         _MINT_FEE,
@@ -128,27 +145,34 @@ def createCollection(
     rest_client.wait_for_transaction(txn_hash)
     print("\n Success, txn hash: " + txn_hash)
 
+
 def update_mint_fee(rest_client, alice, _COLLECTION_NAME, _MINT_FEE):
     print(f"checking mint fee config {_MINT_FEE}")
     txn_hash = rest_client.set_mint_fee_per_mille(
         alice, _COLLECTION_NAME, _MINT_FEE
     )
     rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, mint fee per mille is set to:: " + str(_MINT_FEE) + " txn hash: " + txn_hash)
+    print("\n Success, mint fee per mille is set to:: " +
+          str(_MINT_FEE) + " txn hash: " + txn_hash)
+
 
 def setPresaleMintTime(rest_client, alice, _COLLECTION_NAME, _PRESALE_MINT_TIME):
     print("\n=== Setting presale mint time ===")
     txn_hash = rest_client.set_presale_mint_time(
-            alice, _COLLECTION_NAME, _PRESALE_MINT_TIME)
+        alice, _COLLECTION_NAME, _PRESALE_MINT_TIME)
     rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, presale mint time is set to: " + str (datetime.datetime.fromtimestamp(_PRESALE_MINT_TIME)) + " txn hash: " + txn_hash)
+    print("\n Success, presale mint time is set to: " +
+          str(datetime.datetime.fromtimestamp(_PRESALE_MINT_TIME)) + " txn hash: " + txn_hash)
+
 
 def setPublicMintTime(rest_client, alice, _COLLECTION_NAME, _PUBLIC_MINT_TIME):
     print("\n=== Setting public mint time ===")
     txn_hash = rest_client.set_public_mint_time(
-            alice, _COLLECTION_NAME, _PUBLIC_MINT_TIME)
+        alice, _COLLECTION_NAME, _PUBLIC_MINT_TIME)
     rest_client.wait_for_transaction(txn_hash)
-    print("\n Success, public mint time is set to: " + str(datetime.datetime.fromtimestamp(_PUBLIC_MINT_TIME)) + " txn hash: " + txn_hash)
+    print("\n Success, public mint time is set to: " +
+          str(datetime.datetime.fromtimestamp(_PUBLIC_MINT_TIME)) + " txn hash: " + txn_hash)
+
 
 def uploadNftsToCm(
     _ASSET_FOLDER, _COLLECTION_NAME, _METADATA_FOLDER, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR,
@@ -173,7 +197,8 @@ def uploadNftsToCm(
 
     nfts = []
     for index, uriInfo in enumerate(uri_list):
-        if "onChain" in uriInfo.keys() and uriInfo["onChain"]: continue
+        if "onChain" in uriInfo.keys() and uriInfo["onChain"]:
+            continue
 
         # tmp_name = _COLLECTION_NAME + " - #" + str(counter)
         tmp_uri = uriInfo["uri"]
@@ -185,12 +210,13 @@ def uploadNftsToCm(
             tmp_name = data["name"]
             tmp_description = data["description"]
             for trait in data['attributes']:
-                if isinstance(trait['value'], str): 
+                if isinstance(trait['value'], str):
                     propertyKey.append(trait['trait_type'])
                     propertyValue.append(trait['value'].encode())
                     propertyType.append('String')
         nfts.append(
-            {"nft": NFT(tmp_name, tmp_uri, tmp_description, propertyKey, propertyValue, propertyType), "uriInfoIndex": index}
+            {"nft": NFT(tmp_name, tmp_uri, tmp_description, propertyKey,
+                        propertyValue, propertyType), "uriInfoIndex": index}
         )
         propertyKey, propertyValue, propertyType = [], [], []
     random.shuffle(nfts)
@@ -202,7 +228,8 @@ def uploadNftsToCm(
         propertyValues.append(nftInfo["nft"].propertyValue)
         propertyTypes.append(nftInfo["nft"].propertyType)
 
-    print(f"Uploading {len(nfts)} NFTs out of {len(uri_list)} ({len(uri_list) - len(nfts)} already uploaded).")
+    print(
+        f"Uploading {len(nfts)} NFTs out of {len(uri_list)} ({len(uri_list) - len(nfts)} already uploaded).")
     # batch upload x nft at a time
     batch_num = BATCH_NUMBER
     num_batch = len(all_token_names) // batch_num
@@ -212,25 +239,30 @@ def uploadNftsToCm(
         print(f"batch iter:{i}")
         startIndex = i * batch_num
         endIndex = startIndex + batch_num
-        success = handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes, alice, _COLLECTION_NAME, rest_client)
-        if success: successfulUploadIndexes.extend(range(startIndex, endIndex))
+        success = handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR,
+                                  _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes, alice, _COLLECTION_NAME, rest_client)
+        if success:
+            successfulUploadIndexes.extend(range(startIndex, endIndex))
         for successfulUploadIndex in successfulUploadIndexes:
-            uri_list[nfts[successfulUploadIndex]["uriInfoIndex"]]["onChain"] = True
+            uri_list[nfts[successfulUploadIndex]
+                     ["uriInfoIndex"]]["onChain"] = True
         with open(uri_list_file_path, "w") as uri_list_file:
             json.dump(uri_list, uri_list_file, indent=4)
     if remainder:
         startIndex = num_batch*batch_num
         endIndex = len(all_token_names)
-        success = handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes, alice, _COLLECTION_NAME, rest_client)
-        if success: successfulUploadIndexes.extend(range(startIndex, endIndex))
+        success = handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, _ROYALTY_POINTS_DENOMINATOR,
+                                  _ROYALTY_POINTS_NUMERATOR, propertyKeys, propertyValues, propertyTypes, alice, _COLLECTION_NAME, rest_client)
+        if success:
+            successfulUploadIndexes.extend(range(startIndex, endIndex))
         for successfulUploadIndex in successfulUploadIndexes:
-            uri_list[nfts[successfulUploadIndex]["uriInfoIndex"]]["onChain"] = True
+            uri_list[nfts[successfulUploadIndex]
+                     ["uriInfoIndex"]]["onChain"] = True
         with open(uri_list_file_path, "w") as uri_list_file:
             json.dump(uri_list, uri_list_file, indent=4)
 
     if len(successfulUploadIndexes) != len(nfts):
         print(f"Not all nfts ({len(successfulUploadIndexes)} out of {len(nfts)}) were uploaded successfully to the candy machine. Try to \"Retry failed uploads\".")
-            
 
 
 def handleNftUpload(
@@ -246,10 +278,12 @@ def handleNftUpload(
     batch_property_values = propertyValues[startIndex:endIndex]
     batch_property_types = propertyTypes[startIndex:endIndex]
     try:
-        txn_hash = rest_client.upload_nft(alice, _COLLECTION_NAME, batch_token_names, batch_descrips, batch_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, batch_property_keys, batch_property_values, batch_property_types)
+        txn_hash = rest_client.upload_nft(alice, _COLLECTION_NAME, batch_token_names, batch_descrips, batch_uri,
+                                          _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, batch_property_keys, batch_property_values, batch_property_types)
         rest_client.wait_for_transaction(txn_hash)
     except Exception as e:
-        print(f"An error occured while uploading batch from {startIndex} to {endIndex}")
+        print(
+            f"An error occured while uploading batch from {startIndex} to {endIndex}")
         print(e)
         return False
     print("\n Success, txn hash: " + txn_hash)
@@ -275,7 +309,9 @@ def retryFailedUploads():
     privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
     alice = Account(accountAddress, privateKey)
 
-    uploadNftsToCm(_ASSET_FOLDER, _COLLECTION_NAME, _METADATA_FOLDER, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, alice, rest_client)
+    uploadNftsToCm(_ASSET_FOLDER, _COLLECTION_NAME, _METADATA_FOLDER,
+                   _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, alice, rest_client)
+
 
 def mint():
     with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
@@ -289,7 +325,7 @@ def mint():
     accountAddres = AccountAddress.from_hex(_ACCOUNT_ADDRESS)
     privateKey = ed25519.PrivateKey.from_hex(_ACCOUNT_PRIVATE_KEY)
     alice = Account(accountAddres, privateKey)
-    #Testing mint
+    # Testing mint
     print("\n=== Bob going to mint NFT ===")
     if MODE == 'test' or MODE == 'main':
         bob = alice
@@ -300,8 +336,9 @@ def mint():
     print(f'Public key: {alice.address()}\n')
     print(f'Private key: {alice.private_key}\n')
     for i in range(3):
-        FaucetClient(FAUCET_URL, rest_client).fund_account(bob.address(), 100000000)
-    accountBalance = int (rest_client.account_balance(bob.address().hex()))
+        FaucetClient(FAUCET_URL, rest_client).fund_account(
+            bob.address(), 100000000)
+    accountBalance = int(rest_client.account_balance(bob.address().hex()))
     print(accountBalance)
     txn_hash = rest_client.mint_tokens(
         user=bob, admin_addr=alice.address(), collection_name=_COLLECTION_NAME, amount=1)

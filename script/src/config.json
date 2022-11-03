@@ -3,30 +3,27 @@
         "solution": "pinata",
         "pinata": {
             "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
-            "pinataPublicKey": "4b667c45c40242b041da",
-            "pinataSecretKey": "aceba97fe40b499a253b1dc1d61d2cab6d1a44e74d977ac87f7614fa3a1c837b"
-        },
-        "arweave": {
-            "keyfilePath": "/Users/Shared/arweave-keyfile.json"
+            "pinataPublicKey": "aebd565e024e73033c51",
+            "pinataSecretKey": "9fea9374d29966dff3c8d26211ae7c58b3397b4bf54edac71f82480b5d2b7379"
         }
     },
     "candymachine": {
-        "cmPublicKey": "0x3b3a0901cfc91b289cd16b62b28fd850e52a2921d463945a3722c33a81bad453",
-        "cmPrivateKey": "0x80fd0f609fe180f44db7c3dde7704daf53a621e602a86bf461ac2cfe0b28370a"
+        "cmPublicKey": "0xc6065faf57b7b25c31c1f6c82de6460d75c636d8955ca9c0bcded9191c7138f7",
+        "cmPrivateKey": "0xf3e01d92a767f0b49a9b638a05998362e907dce4e64489b0652dc759a7a9c377"
     },
     "collection": {
-        "assetDir": "/Users/Shared/assets/images",
-        "metadataDir": "/Users/Shared/assets/metadata",
-        "collectionName": "TestCollection101",
-        "collectionDescription": "placeholder",
-        "collectionCover": "",
+        "assetDir": "C:/Users/wyzbr/Desktop/Aptos-NFT-Mint/assets/images",
+        "metadataDir": "C:/Users/wyzbr/Desktop/Aptos-NFT-Mint/assets/metadata",
+        "collectionName": "Aloy Test",
+        "collectionDescription": "Test collection for Aloy",
+        "collectionCover": "C:/Users/wyzbr/Desktop/Aptos-NFT-Mint/assets/images/cover.png",
         "collectionSize": 10,
         "maxMintPerWallet": 3,
-        "mintFee": 10,
+        "mintFee": 0,
         "royalty_points_denominator": 1000,
         "royalty_points_numerator": 100,
-        "presaleMintTime": 100000000,
-        "publicMintTime": 100000000,
-        "whitelistDir": "/Users/Shared/assets"
+        "presaleMintTime": 0,
+        "publicMintTime": 0,
+        "whitelistDir": "C:/Users/wyzbr/Desktop/Aptos-NFT-Mint/whitelist.txt"
     }
 }
