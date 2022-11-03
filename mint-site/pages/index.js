@@ -144,13 +144,13 @@ export default function Home() {
           <meta name="description" content="Aptos NFT Mint" />
           <link rel="icon" href="/favicon.ico" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
           <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet" />
         </Head>
         <div id="overlay"></div>
         <main className={styles.main}>
           <h1 className={styles.title}>
-            Jubilee's Multiverse  Mint
+            Jubilees Multiverse  Mint
           </h1>
           <div className={styles.topcorner}>
             <ConnectWalletButton connectButton={!wallet.connected} className="d-flex" />
