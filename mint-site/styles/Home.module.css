@@ -118,13 +118,13 @@
   width: 100%;
   color: white;
   background: #1b1b1b;
-  border: none;
   border-radius: .5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: .5rem 1rem;
   transition: 0.4s all;
+  border: 1px solid rgb(131, 131, 131);
 }
 
 .connectWalletBtn img {
