@@ -150,12 +150,12 @@ export default function Home() {
         <div id="overlay"></div>
         <main className={styles.main}>
           <h1 className={styles.title}>
-            Jubilees Multiverse  Mint
+            Impz Mint
           </h1>
           <div className={styles.topcorner}>
             <ConnectWalletButton connectButton={!wallet.connected} className="d-flex" />
           </div>
-          <img src={collectionCoverUrl} />
+          <img src="./Impz-gif.gif"  />
           <div id="collection-info" className="d-flex flex-column align-items-center text-white" style={{width: "80%"}}>
             {isFetchignCmData ? <Spinner animation="border" role="status" className="mt-5"><span className="visually-hidden">Loading...</span></Spinner> : 
             <>

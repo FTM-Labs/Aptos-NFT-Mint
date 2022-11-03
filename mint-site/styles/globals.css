@@ -3,7 +3,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  background: url(../public/house.gif) center center/cover;
+  background: url(../public/impz_bg_2.jpg) center center/cover;
 }
 
 a {
@@ -51,7 +51,7 @@ html {
 }
 
 #__next > div.bg-gray-500 > div > main > img {
-  width: 10em;
+  width: 50%;
   border: 2px solid #1b1b1b;
   border-radius: 10px;
 }

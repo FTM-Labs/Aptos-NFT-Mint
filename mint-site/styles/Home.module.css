@@ -23,7 +23,7 @@
 }
 
 .button {
-  background-color: #33ddaa;
+  background-color: #480238;
   color: white;
   border: none;
   border-radius: .3rem;
@@ -34,7 +34,7 @@
 }
 
 .button:hover {
-  background: #389478;
+  background: #480238;
 }
 
 .button:disabled {
@@ -154,7 +154,7 @@
 
 .walletAdapterOption {
   color: white;
-  background: #33ddaa;
+  background: #480238;
   border: none;
   display: flex;
   justify-content: center;
