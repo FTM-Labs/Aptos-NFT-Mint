@@ -2,10 +2,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-
-  background: #111111;
+  font-family: 'Poppins', sans-serif;
+  background: url(../public/house.gif) center center/cover;
 }
 
 a {
@@ -38,3 +36,43 @@ html {
   background: #111111!important;
   color: white!important;
 }
+
+#collection-info > div,
+#collection-info > h4,
+#collection-info > h5 {
+  background-color: #1b1b1b;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgb(95, 95, 95);
+}
+
+#collection-info div input {
+  background: #333;
+}
+
+#__next > div.bg-gray-500 > div > main > img {
+  width: 10em;
+  border: 2px solid #1b1b1b;
+  border-radius: 10px;
+}
+
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #333;
+  opacity: 0.4;
+  z-index: 0;
+}
+
+#__next > div.bg-gray-500 > div > main {
+  z-index: 1;
+  position: relative;
+}
+
+#__next > div.bg-gray-500 > div > main > h1 {
+  font-family: 'Poppins', sans-serif;
+}
+

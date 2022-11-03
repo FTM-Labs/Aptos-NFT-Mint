@@ -143,16 +143,19 @@ export default function Home() {
           <title>Aptos NFT Mint</title>
           <meta name="description" content="Aptos NFT Mint" />
           <link rel="icon" href="/favicon.ico" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet" />
         </Head>
-
+        <div id="overlay"></div>
         <main className={styles.main}>
           <h1 className={styles.title}>
-            {collectionName} Mint
+            Jubilee's Multiverse  Mint
           </h1>
           <div className={styles.topcorner}>
             <ConnectWalletButton connectButton={!wallet.connected} className="d-flex" />
           </div>
-          <img src={collectionCoverUrl} style={{ width: "480px", height:"480px" }} />
+          <img src={collectionCoverUrl} />
           <div id="collection-info" className="d-flex flex-column align-items-center text-white" style={{width: "80%"}}>
             {isFetchignCmData ? <Spinner animation="border" role="status" className="mt-5"><span className="visually-hidden">Loading...</span></Spinner> : 
             <>
