@@ -4,7 +4,7 @@ from client import RestClient
 from aptos_sdk.client import FaucetClient
 import os
 import sys
-from constants import NODE_URL, BATCH_NUMBER, FAUCET_URL, MODE, SUPPORTED_IMAGE_FORMATS
+from constants import NODE_URL, BATCH_NUMBER, FAUCET_URL, MODE
 from aptos_sdk.account_address import AccountAddress
 from aptos_sdk.account import Account
 from aptos_sdk import ed25519
@@ -56,11 +56,6 @@ def mint(num_mints, amount_per_mint):
     cmAccount = get_cm_account()
     
     print(cmAccount.address())
-    # if MODE == 'dev':
-    #     user = Account.generate()
-    #     for i in range(3):
-    #         faucet_client.fund_account(user.address(), 100000000)
-    # else:
     user = cmAccount
     accountBalance = int (rest_client.account_balance(user.address().hex()))
     print(f"user account balance: {accountBalance}")
@@ -99,9 +94,9 @@ def update_public_mint_time():
     rest_client.wait_for_transaction(txn_hash)
     print("\n Success, public mint time is set to: " + str(datetime.datetime.fromtimestamp(_PUBLIC_MINT_TIME)) + " txn hash: " + txn_hash)
 
-def update_whitelist():
+def append_or_overwrite_whitelist():
     cmAccount = get_cm_account()
-    print("\n=== Updating Whitelist ===")
+    print("\n=== Appending or Overwriting Whitelist ===")
     wl_file = open(_WL_DIR + '/whitelist.txt', 'r')
     lines = wl_file.readlines()
     addresses, wl_supplies = [], []
@@ -121,7 +116,7 @@ def update_whitelist():
         print(f"batch iter:{i}")
         startIndex = i * batch_num
         endIndex = min(startIndex + batch_num, len(addresses))
-        txn_hash = rest_client.update_whitelist(
+        txn_hash = rest_client.append_or_overwrite_whitelist(
             cmAccount, _COLLECTION_NAME, addresses[startIndex:endIndex], wl_supplies[startIndex:endIndex]
         )
         rest_client.wait_for_transaction(txn_hash)
@@ -153,11 +148,15 @@ def uploadFolderToIpfs():
 
     os.chdir(_ASSET_FOLDER)
     failed_file_names = []
+    cover = None
 
     for file in os.listdir():
-        if file.endswith(SUPPORTED_IMAGE_FORMATS):
+        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
             file_name = file.split('.')[0]
             file_path = _ASSET_FOLDER + '/' + file
+            if file_name == "cover":
+                cover = file_path
+                continue
             if isFileAlreadyUploaded(file_name, uri_list): continue
             print('uploading file: ' + file_path)
             ipfsHash = uploadToIpfs(file_path)
@@ -184,11 +183,16 @@ def uploadFolderToIpfs():
     
     print(f"Files that failed to upload: {failed_file_names}")
     if len(failed_file_names) == 0: print("All images were uploaded successfully")
+
     # set cover image if cover.png is not supplied
-    if not config['collection']['collectionCover']: 
+    with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
+        config = json.load(f)
+    if not cover: 
         config['collection']['collectionCover'] = uri_list[0]["uri"]
-        with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
-            json.dump(config, configfile, indent=4)
+    else:
+        config['collection']['collectionCover'] = constants.IPFS_GATEWAY + uploadToIpfs(cover)
+    with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
+        json.dump(config, configfile, indent=4)
     return len(failed_file_names) == 0 # whether all files were uploaded or not
 
 
@@ -211,39 +215,6 @@ def uploadToArweave(file_path, format: str):
     except:
         return None
 
-def silenceArweaveTransactions():
-    logger = logging.getLogger("arweave_lib")
-    # only log really bad events
-    logger.setLevel(logging.ERROR)
-
-def getUriList(uri_list_file_path):
-    uri_list = []
-
-    if os.path.exists(_ASSET_FOLDER + '/' + 'image_uris.json'):
-        print("Continuing previous storage upload...")
-        with open(uri_list_file_path, "r") as uri_list_file:
-            uri_list = json.load(uri_list_file)
-    return uri_list
-
-def isFileAlreadyUploaded(fileName, uri_list):
-    for uploaded_file in uri_list:
-        if uploaded_file["name"] == fileName: return True
-    if fileName == 'cover' and len(config['collection']['collectionCover']) != 0: return True
-    return False
-
-def saveUploadInfo(uri_info, uri_list, uri_list_file_path):
-    print(uri_info)
-    if uri_info["name"] == 'cover':
-        config['collection']['collectionCover'] = uri_info["uri"]
-        with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
-            json.dump(config, configfile, indent=4)
-        return uri_list
-
-    uri_list.append(uri_info)
-    with open(uri_list_file_path, "w") as uri_list_file:
-        json.dump(uri_list, uri_list_file, indent=4)
-    return uri_list
-
 def uploadFolderToArweave():
     silenceArweaveTransactions()
 
@@ -252,11 +223,14 @@ def uploadFolderToArweave():
 
     os.chdir(_ASSET_FOLDER)
     failed_file_names = []
+    cover = None
     for file in os.listdir():
-        if file.endswith(SUPPORTED_IMAGE_FORMATS):
+        if file.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
             file_name, format = file.split('.')
             file_path = _ASSET_FOLDER + '/' + file
-
+            if file_name == "cover":
+                cover = file_path
+                continue
             if isFileAlreadyUploaded(file_name, uri_list): continue
 
             print('uploading file: ' + file_path + " of format: " + format)
@@ -290,9 +264,17 @@ def uploadFolderToArweave():
 
             uri_list = saveUploadInfo(uri_info, uri_list, uri_list_file_path)
             
-    
     print(f"Files that failed to upload: {failed_file_names}")
     if len(failed_file_names) == 0: print("All images were uploaded successfully")
+    # set cover image if cover.png is not supplied
+    with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
+        config = json.load(f)
+    if not cover: 
+        config['collection']['collectionCover'] = uri_list[0]["uri"]
+    else:
+        config['collection']['collectionCover'] = uploadToArweave(cover)
+    with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
+        json.dump(config, configfile, indent=4)
     return len(failed_file_names) == 0 # whether all files were uploaded or not
 
 def uploadFolder():
@@ -300,12 +282,37 @@ def uploadFolder():
     elif _STORAGE_SOLUTION == "arweave": return uploadFolderToArweave()
     else: raise Exception("Storage solution is not supported. Please select either pinata or arweave")
 
+def silenceArweaveTransactions():
+    logger = logging.getLogger("arweave_lib")
+    # only log really bad events
+    logger.setLevel(logging.ERROR)
+
+def getUriList(uri_list_file_path):
+    uri_list = []
+
+    if os.path.exists(_ASSET_FOLDER + '/' + 'image_uris.json'):
+        print("Continuing previous storage upload...")
+        with open(uri_list_file_path, "r") as uri_list_file:
+            uri_list = json.load(uri_list_file)
+    return uri_list
+
+def isFileAlreadyUploaded(fileName, uri_list):
+    for uploaded_file in uri_list:
+        if uploaded_file["name"] == fileName: return True
+    if fileName == 'cover' and len(config['collection']['collectionCover']) != 0: return True
+    return False
+
+def saveUploadInfo(uri_info, uri_list, uri_list_file_path):
+    uri_list.append(uri_info)
+    with open(uri_list_file_path, "w") as uri_list_file:
+        json.dump(uri_list, uri_list_file, indent=4)
+    return uri_list
 
 def verifyMetadataFiles():
     is_valid = True
 
     assets = os.listdir(_ASSET_FOLDER)
-    images = [asset.split(".")[0] for asset in assets if asset.endswith(SUPPORTED_IMAGE_FORMATS)]
+    images = [asset.split(".")[0] for asset in assets if asset.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'))]
     metadatas = [metadata for metadata in os.listdir(_METADATA_FOLDER) if metadata.endswith(".json")]
     token_names = []
     if len(metadatas) != _COLLECTION_SIZE:
@@ -330,7 +337,6 @@ def verifyMetadataFiles():
                 if type(metadata_config["name"]) != str:
                     print(f"{metadata} can only be a string.")
                     is_valid = False
-
             if "description" not in metadata_config.keys():
                 print(f"Metadata file {metadata} does not have a description.")
                 is_valid = False
@@ -349,17 +355,9 @@ def verifyMetadataFiles():
                     if "trait_type" not in attribute.keys():
                         print(f"Metadata file {metadata} trait_type not present on an attribute")
                         is_valid = False
-                    else:
-                        if type(attribute["trait_type"]) != str:
-                            print(f"Metadata file {metadata} attribute type {attribute['trait_type']} is not a string.")
-                            is_valid = False
                     if "value" not in attribute.keys():
                         print(f"Metadata file {metadata} value not present on an attribute")
                         is_valid = False
-                    else:
-                        if type(attribute["value"]) != str:
-                            print(f"Metadata file {metadata} attribute value {attribute['value']} is not a string.")
-                            is_valid = False
 
     if len(token_names) != len(set(token_names)):
         print("You have duplicate token names.")

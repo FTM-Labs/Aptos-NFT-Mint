@@ -3,7 +3,6 @@ import styles from '../../styles/Home.module.css'
 
 import {useWallet} from "@manahippo/aptos-wallet-adapter"
 
-import aptosLogo from "../../public/aptosLogo.png"
 import ConnectWalletModal from "./ConnectWalletModal"
 
 const ConnectWalletButton = (props) => {
@@ -21,8 +20,7 @@ const ConnectWalletButton = (props) => {
     }
 
     const button = <button disabled={disabled} className={`${styles.connectWalletBtn} ${className} ${disabled ? "disabled" : ""}`} onClick={handleButtonClick} style={style}>
-        <img src={aptosLogo.src} />
-        <h4 className="mb-0">{connectButton ? "Connect" : "Disconnect"}</h4>
+        {connectButton ? "Connect Wallet" : "Disconnect"}
     </button>
 
     return (

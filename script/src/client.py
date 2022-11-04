@@ -98,7 +98,7 @@ class RestClient(client.RestClient):
         return self.submit_bcs_transaction(signed_transaction)
 
     
-    def update_whitelist(
+    def append_or_overwrite_whitelist(
         self, 
         account: Account, 
         name: str, 
@@ -114,7 +114,7 @@ class RestClient(client.RestClient):
 
         payload = EntryFunction.natural(
             CONTRACT_ADDRESS,
-            "update_whitelist",
+            "append_or_overwrite_whitelist",
             [],
             transaction_arguments,
         )
@@ -124,6 +124,26 @@ class RestClient(client.RestClient):
         )
         return self.submit_bcs_transaction(signed_transaction)
 
+    def clear_whitelist(
+        self,
+        account: Account,
+        name: str
+    ) -> str:
+        transaction_arguments = [
+            TransactionArgument(name, Serializer.str),
+        ]
+
+        payload = EntryFunction.natural(
+            CONTRACT_ADDRESS,
+            "clear_whitelist",
+            [],
+            transaction_arguments,
+        )
+
+        signed_transaction = self.create_single_signer_bcs_transaction(
+            account, TransactionPayload(payload)
+        )
+        return self.submit_bcs_transaction(signed_transaction)
 
     def set_is_public(
         self,
@@ -224,10 +244,7 @@ class RestClient(client.RestClient):
         token_descrip: list,
         token_uri: list,
         royalty_denominator: str,
-        royalty_numerator: str,
-        propertyKeys: list,
-        propertyValues: list,
-        propertyTypes: list
+        royalty_numerator: str
     ) -> str:
         transaction_arguments = [
             TransactionArgument(collection_name, Serializer.str),
@@ -237,10 +254,7 @@ class RestClient(client.RestClient):
             TransactionArgument(account.address(), Serializer.struct),
             TransactionArgument(int(royalty_denominator), Serializer.u64),
             TransactionArgument(int(royalty_numerator), Serializer.u64),
-            TransactionArgument([False, False, False, False, False], Serializer.sequence_serializer(Serializer.bool)),
-            TransactionArgument(propertyKeys, Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.str))),
-            TransactionArgument(propertyValues, Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.u8)))),
-            TransactionArgument(propertyTypes, Serializer.sequence_serializer(Serializer.sequence_serializer(Serializer.str))),
+            TransactionArgument([False, True, True, True, True], Serializer.sequence_serializer(Serializer.bool)),
         ]
 
         payload = EntryFunction.natural(

@@ -20,6 +20,7 @@ class CandyMachine:
         self.faucet = None
         self.account = None
         print(f"Mode: {self.mode}")
+        print(f"Contract address: {constants.CONTRACT_ADDRESS}")
         if mode == 'dev':
             self.node = constants.DEV_NET_NODE
             self.faucet = constants.DEV_NET_FAUCET
@@ -104,30 +105,17 @@ class CandyMachine:
         with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
             json.dump(config, configfile, indent=4)
         return account
-
-    # TODO: check if hashlips metadata has collection name field
-    def fetch_collection_name_and_description(self):
-        with open(os.path.join(sys.path[0], "config.json"), 'r') as f:
-            config = json.load(f)
-        metadataFile = os.listdir(self.metadata_folder)[0]
-        if metadataFile.endswith(".json"):
-            with open(os.path.join(self.metadata_folder, metadataFile), "r") as metadata:
-                config['collection']['collectionName'] = metadata['collection']['name']
-                config['collection']['collectionDescription'] = metadata['description']
-            with open(os.path.join(sys.path[0], "config.json"), 'w') as configfile:
-                json.dump(config, configfile, indent=4)
         
     def create(self):
         print("\n=== Preparing candy machine account ===")
         self.prepareAccount()
         print("\n=== Verifying assets and metadata ===")
         if not util.verifyMetadataFiles(): return
-
+        
         print('\n=== Upload assets to storage solution ===')
         if not util.uploadFolder():
             print("Not all files were uploaded to storage. Try again.")
             return
-
         self.createCandyMachine()
         self.createCollection()
         self.uploadNftsToCm()
@@ -178,19 +166,21 @@ class CandyMachine:
         all_descrips, 
         all_uri, 
         _ROYALTY_POINTS_DENOMINATOR, 
-        _ROYALTY_POINTS_NUMERATOR, 
-        propertyKeys, 
-        propertyValues, 
-        propertyTypes
+        _ROYALTY_POINTS_NUMERATOR
     ):
         batch_token_names = all_token_names[startIndex:endIndex]
         batch_descrips = all_descrips[startIndex:endIndex]
         batch_uri = all_uri[startIndex:endIndex]
-        batch_property_keys = propertyKeys[startIndex:endIndex]
-        batch_property_values = propertyValues[startIndex:endIndex]
-        batch_property_types = propertyTypes[startIndex:endIndex]
         try:
-            txn_hash = self.rest_client.upload_nft(self.account, self.collection_name, batch_token_names, batch_descrips, batch_uri, _ROYALTY_POINTS_DENOMINATOR, _ROYALTY_POINTS_NUMERATOR, batch_property_keys, batch_property_values, batch_property_types)
+            txn_hash = self.rest_client.upload_nft(
+                self.account, 
+                self.collection_name, 
+                batch_token_names, 
+                batch_descrips, 
+                batch_uri, 
+                _ROYALTY_POINTS_DENOMINATOR, 
+                _ROYALTY_POINTS_NUMERATOR
+            )
             self.rest_client.wait_for_transaction(txn_hash)
         except Exception as e:
             print(f"An error occured while uploading batch from {startIndex} to {endIndex}")
@@ -209,13 +199,6 @@ class CandyMachine:
         all_token_names = list()
         all_uri = list()
 
-        propertyKey = []
-        propertyValue = []
-        propertyType = []
-        propertyKeys = []
-        propertyValues = []
-        propertyTypes = []
-
         nfts = []
         for index, uriInfo in enumerate(uri_list):
             if "onChain" in uriInfo.keys() and uriInfo["onChain"]: continue
@@ -226,23 +209,15 @@ class CandyMachine:
                 data = json.load(metadata_file)
                 tmp_name = data["name"]
                 tmp_description = data["description"]
-                for trait in data['attributes']:
-                    if isinstance(trait['value'], str): 
-                        propertyKey.append(trait['trait_type'])
-                        propertyValue.append(trait['value'].encode())
-                        propertyType.append('String')
             nfts.append(
-                {"nft": NFT(tmp_name, tmp_uri, tmp_metadata_uri, tmp_description, propertyKey, propertyValue, propertyType), "uriInfoIndex": index}
+                {"nft": NFT(tmp_name, tmp_uri, tmp_metadata_uri, tmp_description), "uriInfoIndex": index}
             )
-            propertyKey, propertyValue, propertyType = [], [], []
+
         random.shuffle(nfts)
         for nftInfo in nfts:
             all_token_names.append(nftInfo["nft"].name)
             all_descrips.append(nftInfo["nft"].description)
             all_uri.append(nftInfo["nft"].metadataUri)
-            propertyKeys.append(nftInfo["nft"].propertyKey)
-            propertyValues.append(nftInfo["nft"].propertyValue)
-            propertyTypes.append(nftInfo["nft"].propertyType)
 
         print(f"Uploading {len(nfts)} NFTs out of {len(uri_list)} ({len(uri_list) - len(nfts)} already uploaded).")
         # batch upload x nft at a time
@@ -258,7 +233,14 @@ class CandyMachine:
             print(f"batch iter:{i}")
             startIndex = i * batch_num
             endIndex = min(startIndex + batch_num, len(all_token_names))
-            success = self.handleNftUpload(startIndex, endIndex, all_token_names, all_descrips, all_uri, self.royalty_points_denominator, self.royalty_points_numerator, propertyKeys, propertyValues, propertyTypes)
+            success = self.handleNftUpload(
+                startIndex, 
+                endIndex, 
+                all_token_names, 
+                all_descrips, 
+                all_uri, 
+                self.royalty_points_denominator, 
+                self.royalty_points_numerator)
             if success: successfulUploadIndexes.extend(range(startIndex, endIndex))
             for successfulUploadIndex in successfulUploadIndexes:
                 uri_list[nfts[successfulUploadIndex]["uriInfoIndex"]]["onChain"] = True

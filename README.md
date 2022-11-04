@@ -234,7 +234,9 @@ then run
 npm run dev
 ```
 # Sanity check
-use test mint function from the cli to check if the minting is successful (preferably on devnet and testnet first). The test mint will attempt to ming ONE nft from your collection. On devnet, the program will automatically drop 3 Aptos, on testnet and mainnet, make sure your cm account has enough funds.)
+1. Use the sample images and metadata first to check if everything works.
+2. use test mint function from the cli to check if the minting is successful (preferably on devnet and testnet first). The test mint will attempt to ming ONE nft from your collection. On devnet, the program will automatically drop 3 Aptos, on testnet and mainnet, make sure your cm account has enough funds.)
+
 
 # Troubleshooting
 

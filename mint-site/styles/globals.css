@@ -1,11 +1,10 @@
 html,
 body {
   padding: 0;
-  margin: 0;
+  margin: 10;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-
-  background: #111111;
+  background-color: #000000;
 }
 
 a {
@@ -33,8 +32,21 @@ html {
   background-color: black;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
 
 .modal-content {
-  background: #111111!important;
   color: white!important;
+  background: rgba(255, 255, 255, .2);
+  backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }

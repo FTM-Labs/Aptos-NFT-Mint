@@ -1,0 +1,41 @@
+{
+    "name": "1",
+    "symbol": "",
+    "image": "https://cloudflare-ipfs.com/ipfs/QmWHRdp9svU916CMBicNnFn8CZbYHKV5CK9fcrRteNVJMz",
+    "properties": {
+        "files": [
+            {
+                "uri": "0.png",
+                "type": "image/png"
+            }
+        ],
+        "category": "image",
+        "creators": [
+            {
+                "address": "CV6uQbknPdCVPQunQHqosyvdHJeTuq3629VJdzs8AYjV",
+                "share": 100
+            }
+        ]
+    },
+    "description": "",
+    "seller_fee_basis_points": 500,
+    "attributes": [
+        {
+            "trait_type": "background",
+            "value": "blue"
+        },
+        {
+            "trait_type": "eyes",
+            "value": "star-eyes"
+        },
+        {
+            "trait_type": "mouth",
+            "value": "triangle-mouth"
+        },
+        {
+            "trait_type": "face",
+            "value": "teal-face"
+        }
+    ],
+    "collection": {}
+}

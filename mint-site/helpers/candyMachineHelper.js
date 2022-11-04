@@ -1,5 +1,5 @@
 import axios from "axios";
-import {candyMachineAddress, collectionName, mode, NODE_URL, CONTRACT_ADDRESS} from "./candyMachineInfo"
+import {candyMachineAddress, collectionName, mode, NODE_URL, CONTRACT_ADDRESS, SERVICE_NAME} from "./candyMachineInfo"
 
 
 async function getCandyMachineResourceAccount() {
@@ -7,7 +7,7 @@ async function getCandyMachineResourceAccount() {
     const resources = response.data;
 
     for (const resource of resources) {
-        if (resource.type === `${CONTRACT_ADDRESS}::candy_machine_v2::ResourceData`) {
+        if (resource.type === `${CONTRACT_ADDRESS}::${SERVICE_NAME}::ResourceData`) {
             return resource.data.resource_account.account;
         }
     }
@@ -30,7 +30,7 @@ async function getCandyMachineCollectionInfo(
             collectionInfo.tokenDataHandle = resource.data.token_data.handle;
             continue;
         }
-        if (resource.type === `${CONTRACT_ADDRESS}::candy_machine_v2::CollectionConfigs`) {
+        if (resource.type === `${CONTRACT_ADDRESS}::${SERVICE_NAME}::CollectionConfigs`) {
             collectionInfo.candyMachineConfigHandle = resource.data.collection_configs.handle;
         }
     }
@@ -43,7 +43,7 @@ async function getCandyMachineConfigData(
 ) {
     const data = JSON.stringify({
         "key_type": "vector<u8>",
-        "value_type": `${CONTRACT_ADDRESS}::candy_machine_v2::CollectionConfig`,
+        "value_type": `${CONTRACT_ADDRESS}::${SERVICE_NAME}::CollectionConfig`,
         "key": stringToHex(collectionName)
     });
     const customConfig = {
@@ -72,19 +72,23 @@ async function getMintedNfts(aptosClient, collectionTokenDataHandle, cmResourceA
             name: event["data"]["id"]["name"],
             imageUri: null
         }
-        try {
-            mintedNft.imageUri = (await aptosClient.getTableItem(collectionTokenDataHandle, {
-                "key_type": "0x3::token::TokenDataId",
-                "value_type": "0x3::token::TokenData",
-                "key": {
-                    "creator": cmResourceAccount,
-                    "collection": collectionName,
-                    "name": mintedNft.name
-                }
-            })).uri
-        } catch (err) {
-            console.error(err);
-        }
+        // try {
+        //     const jsonUrl = (await aptosClient.getTableItem(collectionTokenDataHandle, {
+        //         "key_type": "0x3::token::TokenDataId",
+        //         "value_type": "0x3::token::TokenData",
+        //         "key": {
+        //             "creator": cmResourceAccount,
+        //             "collection": collectionName,
+        //             "name": mintedNft.name
+        //         }
+        //     })).uri
+        //     console.log("11111" + jsonUrl);
+        //     const response = await (await fetch(jsonUrl)).json()
+        //     mintedNft.imageUri = response['image']
+        //     console.log("22222" + mintedNft.imageUri);
+        // } catch (err) {
+        //     console.error(err);
+        // }
         mintedNfts.push(mintedNft)
     }
 
@@ -94,7 +98,16 @@ async function getMintedNfts(aptosClient, collectionTokenDataHandle, cmResourceA
 }
 
 
-
+async function getImgFromApiAsync(url) {
+    return fetch(url)
+    .then((response) => {
+        console.log("222222" + mintedNft.imageUri);
+        return response.json().img
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+ }
 
 function stringToHex(str) {
     var result = '';

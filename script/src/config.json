@@ -3,30 +3,30 @@
         "solution": "pinata",
         "pinata": {
             "pinataApi": "https://api.pinata.cloud/pinning/pinFileToIPFS",
-            "pinataPublicKey": "4b667c45c40242b041da",
-            "pinataSecretKey": "aceba97fe40b499a253b1dc1d61d2cab6d1a44e74d977ac87f7614fa3a1c837b"
+            "pinataPublicKey": "caf083c32d25b6341e1f",
+            "pinataSecretKey": "51fa3982ec3245d1c56f02c6d55e425bc8ade0ffc1eb117e93bb09ec1a517d25"
         },
         "arweave": {
             "keyfilePath": "/Users/Shared/arweave-keyfile.json"
         }
     },
     "candymachine": {
-        "cmPublicKey": "0x3b3a0901cfc91b289cd16b62b28fd850e52a2921d463945a3722c33a81bad453",
-        "cmPrivateKey": "0x80fd0f609fe180f44db7c3dde7704daf53a621e602a86bf461ac2cfe0b28370a"
+        "cmPublicKey": "0xfadbeab921d95f08d2499f674e7ef4f207e57aa063b690399b19162a6080a698",
+        "cmPrivateKey": "0xff9bb002e70e4a0824a1561894299359fd5241b9c9bdf4cd6550a8dd6c1f359d"
     },
     "collection": {
         "assetDir": "/Users/Shared/assets/images",
         "metadataDir": "/Users/Shared/assets/metadata",
-        "collectionName": "TestCollection101",
+        "collectionName": "Test101",
         "collectionDescription": "placeholder",
-        "collectionCover": "",
+        "collectionCover": "https://cloudflare-ipfs.com/ipfs/QmWHRdp9svU916CMBicNnFn8CZbYHKV5CK9fcrRteNVJMz",
         "collectionSize": 10,
-        "maxMintPerWallet": 3,
-        "mintFee": 10,
+        "maxMintPerWallet": 100,
+        "mintFee": 0,
         "royalty_points_denominator": 1000,
-        "royalty_points_numerator": 100,
-        "presaleMintTime": 100000000,
-        "publicMintTime": 100000000,
-        "whitelistDir": "/Users/Shared/assets"
+        "royalty_points_numerator": 60,
+        "presaleMintTime": 0,
+        "publicMintTime": 0,
+        "whitelistDir": "../../"
     }
 }

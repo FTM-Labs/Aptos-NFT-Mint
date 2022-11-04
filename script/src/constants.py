@@ -17,11 +17,9 @@ TEST_NET_FAUCET = os.getenv("APTOS_FAUCET_URL", "https://faucet.testnet.aptoslab
 DEV_NET_NODE = os.getenv("APTOS_NODE_URL", "https://fullnode.devnet.aptoslabs.com/v1")
 DEV_NET_FAUCET = os.getenv("APTOS_FAUCET_URL", "https://faucet.devnet.aptoslabs.com")
 
-CONTRACT_ADDRESS = "0xc17197699c1a5c2d594bda3482e06cda9a7fe87378cbaec2b55aacd03e3f45d3::candy_machine_v2"
-MAX_GAS = 1500000
+CONTRACT_ADDRESS = "0x5b71b400de0767bcec88464c33a0c74c839737206883a9379252f4907b8bf30e::ftmpad"
+MAX_GAS = 2000000
 GAS_UNIT = 100
-BATCH_NUMBER = 200
+BATCH_NUMBER = 300
 IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/"
-SUPPORTED_IMAGE_FORMATS = ('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.webp')
 AR_RESOLVER = "https://arweave.net/"
-

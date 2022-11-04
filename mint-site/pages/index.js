@@ -6,7 +6,7 @@ import { AptosClient } from "aptos";
 import { useWallet } from '@manahippo/aptos-wallet-adapter';
 import cmHelper from "../helpers/candyMachineHelper"
 import ConnectWalletButton from '../helpers/Aptos/ConnectWalletButton';
-import {candyMachineAddress, collectionName, collectionCoverUrl, NODE_URL, CONTRACT_ADDRESS, COLLECTION_SIZE} from "../helpers/candyMachineInfo"
+import {candyMachineAddress, collectionName, collectionCoverUrl, collectionBackgroundUrl, MaxMint, NODE_URL, CONTRACT_ADDRESS, COLLECTION_SIZE, SERVICE_NAME} from "../helpers/candyMachineInfo"
 
 import Spinner from "react-bootstrap/Spinner"
 import Modal from "react-bootstrap/Modal"
@@ -31,16 +31,82 @@ export default function Home() {
         wallet.connect();
     }
   }, [wallet.autoConnect, wallet.wallet, wallet.connect]);
+  
+
+  const [decActive, setDecActive] = useState(false);
+  const [incActive, setIncActive] = useState(true);
+  const [notificationActive, setNotificationActive] = useState(false);
+
+  const incrementMintAmount = async () => {
+    const mintfee = document.getElementById("mintfee")
+    const mintAmount = document.getElementById("mintAmount")
+    
+    if (mintInfo.numToMint === 1) {
+      setDecActive(current => !current);
+      mintInfo.numToMint++; 
+      mintfee.textContent = `${(candyMachineData.data.mintFee * mintInfo.numToMint).toFixed(2)} $APT`
+      mintAmount.textContent = mintInfo.numToMint
+    } 
+    
+    else if (mintInfo.numToMint === MaxMint-1) {
+      setIncActive(current => !current);
+      mintInfo.numToMint++; 
+      mintfee.textContent = `${(candyMachineData.data.mintFee * mintInfo.numToMint).toFixed(2)} $APT`
+      mintAmount.textContent = mintInfo.numToMint
+    } 
+    
+    else if (mintInfo.numToMint < MaxMint) {
+      mintInfo.numToMint++; 
+      mintfee.textContent = `${(candyMachineData.data.mintFee * mintInfo.numToMint).toFixed(2)} $APT`
+      mintAmount.textContent = mintInfo.numToMint
+    }
+  }
+
+  const decrementMintAmount = async () => {
+    
+    const mintfee = document.getElementById("mintfee")
+    const mintAmount = document.getElementById("mintAmount")
+    
+    if (mintInfo.numToMint === 2) {
+      setDecActive(current => !current);
+      mintInfo.numToMint--; 
+      mintfee.textContent = `${(candyMachineData.data.mintFee * mintInfo.numToMint).toFixed(2)} $APT`
+      mintAmount.textContent = mintInfo.numToMint
+    } 
+    
+    else if (mintInfo.numToMint === MaxMint) {
+      setIncActive(current => !current);
+      mintInfo.numToMint--; 
+      mintfee.textContent = `${(candyMachineData.data.mintFee * mintInfo.numToMint).toFixed(2)} $APT`
+      mintAmount.textContent = mintInfo.numToMint
+    } 
+    
+    else if (mintInfo.numToMint > 1) {
+      mintInfo.numToMint--; 
+      mintfee.textContent = `${(candyMachineData.data.mintFee * mintInfo.numToMint).toFixed(2)} $APT`
+      mintAmount.textContent = mintInfo.numToMint
+
+    }
+  }
+
+  function timeout(delay) {
+    return new Promise( res => setTimeout(res, delay) );
+  }
 
   const mint = async () => {
+    if (wallet.account?.address?.toString() === undefined) {
+      setNotificationActive(current => !current);
+      await timeout(3000);
+      setNotificationActive(current => !current);
+    }
     if (wallet.account?.address?.toString() === undefined || mintInfo.minting) return;
 
     console.log(wallet.account?.address?.toString());
     setMintInfo({...mintInfo, minting: true})
-    // Generate a transaction
+    // Generate a transactions
     const payload = {
       type: "entry_function_payload",
-      function: `${CONTRACT_ADDRESS}::candy_machine_v2::mint_tokens`,
+      function: `${CONTRACT_ADDRESS}::${SERVICE_NAME}::mint_tokens`,
       type_arguments: [],
       arguments: [
       	candyMachineAddress,
@@ -118,10 +184,19 @@ export default function Home() {
     setTimeLeftToMint({timeout : mintTimersTimeout, presale: cmHelper.getTimeDifference(currentTime, candyMachineData.data.presaleMintTime), public: cmHelper.getTimeDifference(currentTime, candyMachineData.data.publicMintTime)})
   }
 
-  useEffect(() => {
-    fetchCandyMachineData(true)
-    setInterval(fetchCandyMachineData, autoCmRefresh)
-  }, [])
+ useEffect(() => {
+    fetchCandyMachineData();
+    async function fetchCandyMachineData() {
+        const cmResourceAccount = await cmHelper.getCandyMachineResourceAccount();
+        const collectionInfo = await cmHelper.getCandyMachineCollectionInfo(cmResourceAccount);
+        const configData = await cmHelper.getCandyMachineConfigData(collectionInfo.candyMachineConfigHandle);
+        setCandyMachineData({...candyMachineData, data: {cmResourceAccount, ...collectionInfo, ...configData}})
+    }
+    const interval = setInterval(() => {
+        fetchCandyMachineData();
+    }, 5000);
+    return () => clearInterval(interval);
+    }, []);
 
   useEffect(() => {
     clearTimeout(timeLeftToMint.timeout)
@@ -140,45 +215,74 @@ export default function Home() {
     <div className="bg-gray-500">
       <div className={styles.container}>
         <Head>
-          <title>Aptos NFT Mint</title>
-          <meta name="description" content="Aptos NFT Mint" />
+          <title>Nevermores Mint</title>
+          <meta name="description" content="Nevermores Mint" />
           <link rel="icon" href="/favicon.ico" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+          <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
         </Head>
-
+        <img
+          src={collectionBackgroundUrl}
+          alt={'background'}
+          className={styles.bg_image}
+        />
+        <div
+          className={styles.bg_filter}
+        ></div>
         <main className={styles.main}>
           <h1 className={styles.title}>
-            {collectionName} Mint
+            {collectionName}
           </h1>
           <div className={styles.topcorner}>
             <ConnectWalletButton connectButton={!wallet.connected} className="d-flex" />
           </div>
-          <img src={collectionCoverUrl} style={{ width: "480px", height:"480px" }} />
+          <img src={collectionCoverUrl} className={styles.mintimage} />
           <div id="collection-info" className="d-flex flex-column align-items-center text-white" style={{width: "80%"}}>
             {isFetchignCmData ? <Spinner animation="border" role="status" className="mt-5"><span className="visually-hidden">Loading...</span></Spinner> : 
             <>
               <div className="d-flex align-items-center my-3">
-                <input className={`${styles.defaultInput} me-3`} type="number" min="1" max={candyMachineData.data.maxMintsPerWallet === undefined ? 10 : Math.min(candyMachineData.data.maxMintsPerWallet, candyMachineData.data.numUploadedTokens - candyMachineData.data.numMintedTokens)} value={mintInfo.numToMint} onChange={(e) => setMintInfo({...mintInfo, numToMint: e.target.value})} />
+                <div className={styles.inputbtnsbox}>
+                <button onClick={incrementMintAmount} className={styles.inputbtns} style={{border: incActive ? '' : '1px solid grey'}}>▲</button>
+                <button onClick={decrementMintAmount} className={styles.inputbtns} style={{border: decActive ? '' : '1px solid grey' }}>▼</button>
+                </div>
+                <div id="mint-amount-input" className={`${styles.defaultInput} me-3`}>
+                  <p style={{marginTop: "15px"}} id="mintAmount">{mintInfo.numToMint}</p>
+                </div>
                 <button className={styles.button} onClick={mint} disabled={!canMint}>{mintInfo.minting ? <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner> : "Mint"}</button>
-                <h4 className="mx-3 mb-0">{candyMachineData.data.mintFee * mintInfo.numToMint} $APT</h4>
-                <span style={{width: "15px", height: "15px", borderRadius: "50%", background: candyMachineData.data.isPublic ? "green" : "red"}}></span>
-              </div>
-              <h5>{candyMachineData.data.numMintedTokens}/ {COLLECTION_SIZE} minted</h5>
-              <div className="d-flex flex-column align-items-center my-3">
-                <h3 style={{textDecoration: "underline"}}>Presale In:</h3>
-                <h6>{timeLeftToMint.presale === "LIVE" ? "LIVE" : timeLeftToMint.presale.days + " days : " + timeLeftToMint.presale.hours + " hours : " + timeLeftToMint.presale.minutes + " minutes : " + timeLeftToMint.presale.seconds + " seconds"}</h6>
-              </div>
-              <div className="d-flex flex-column align-items-center my-3">
-                <h3 style={{textDecoration: "underline"}}>Public In:</h3>
-                <h6>{timeLeftToMint.public === "LIVE" ? "LIVE" : timeLeftToMint.public.days + " days : " + timeLeftToMint.public.hours + " hours : " + timeLeftToMint.public.minutes + " minutes : " + timeLeftToMint.public.seconds + " seconds"}</h6>
               </div>
             </>}
+            <div className={styles.mintstats}>
+              <div className={styles.spacebetween}>
+                <h6>Minted NFTs:</h6>
+                <h6>{candyMachineData.data.numMintedTokens} / {COLLECTION_SIZE}</h6>
+              </div>
+              <div className={styles.spacebetween}>
+                <h6>Mint fee: </h6>
+                <h6 id="mintfee">{candyMachineData.data.mintFee * mintInfo.numToMint} $APT</h6>
+              </div>
+              <div className={styles.spacebetween}>
+                <h6>Max mints per wallet: </h6>
+                <h6>{MaxMint}</h6>
+              </div>
+              <div className={styles.spacebetween}>
+                <h6>Presale Mint:</h6>
+                <h6>{timeLeftToMint.presale === "LIVE" ? "LIVE" : timeLeftToMint.presale.days + " d : " + timeLeftToMint.presale.hours + " h : " + timeLeftToMint.presale.minutes + " m : " + timeLeftToMint.presale.seconds + " s"}</h6>
+              </div>
+              <div className={styles.spacebetween}>
+                <h6>Public Mint: </h6>
+                <h6>{timeLeftToMint.public === "LIVE" ? "LIVE" : timeLeftToMint.public.days + " d : " + timeLeftToMint.public.hours + " h : " + timeLeftToMint.public.minutes + " m : " + timeLeftToMint.public.seconds + " s"}</h6>
+              </div>
+            </div>
+          <div className={styles.notification} style={{opacity: notificationActive ? '1' : ''}}>
+            <h6 className={styles.notificationtext}>Please connect your wallet at the top right of the page</h6>
+          </div>  
           </div>
 
           <Modal id="mint-results-modal" show={mintInfo.success} onHide={() => setMintInfo({...mintInfo, success: false, mintedNfts: []})} centered size="lg">
             <Modal.Body className="d-flex flex-column align-items-center pt-5 pb-3">
                 <div className="d-flex justify-content-center w-100 my-5" style={{flexWrap: "wrap"}}>
                     {mintInfo.mintedNfts.map(mintedNft => <div key={mintedNft.name} className={`${styles.mintedNftCard} d-flex flex-column mx-3`}>
-                        <img src={mintedNft.imageUri === null ? "" : mintedNft.imageUri} />
                         <h5 className="text-white text-center mt-2">{mintedNft.name}</h5>
                     </div>)}
                 </div>

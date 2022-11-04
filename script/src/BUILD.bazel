@@ -101,23 +101,11 @@ py_library(
 	]
 )
 
-py_library(
-	name = "update_whitelist",
-	srcs = ["update_whitelist.py"],
-	deps = [
-		":constants",
-		":account",
-		":client",
-		":account_address"
-	]
-)
-
 py_binary(
 	name = "cli",
 	srcs = ["cli.py"],
 	data = ["config.txt"],
 	deps = [
-		":update_whitelist",
 		":create_candy_machine",
 		requirement("pick")
 	]
