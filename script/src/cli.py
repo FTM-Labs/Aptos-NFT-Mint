@@ -29,4 +29,4 @@ if __name__ == "__main__":
     elif index == 5:
         util.update_mint_fee()
     else:
-        util.mint(num_mints = 11, amount_per_mint = 1)
+        util.mint(num_mints = 1, amount_per_mint = 1)
